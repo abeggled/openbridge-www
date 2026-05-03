@@ -1,0 +1,52 @@
+---
+import type { Translations } from '../i18n/en';
+import type { Lang } from '../i18n/index';
+
+interface Props {
+  t: Translations;
+  lang: Lang;
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+}
+
+const { t, lang, title, description, canonicalUrl } = Astro.props;
+const pageTitle = title ?? t.meta.title;
+const pageDesc  = description ?? t.meta.description;
+const altLang   = lang === 'en' ? 'de' : 'en';
+const altPath   = Astro.url.pathname.replace(`/${lang}`, `/${altLang}`);
+---
+<!doctype html>
+<html lang={lang} class="dark scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={pageDesc} />
+    <title>{pageTitle}</title>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {/* Canonical + hreflang */}
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    <link rel="alternate" hreflang={lang}    href={Astro.url.pathname} />
+    <link rel="alternate" hreflang={altLang} href={altPath} />
+    <link rel="alternate" hreflang="x-default" href="/en/" />
+
+    {/* Fonts: Inter + DM Mono via Google Fonts */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    {/* Open Graph */}
+    <meta property="og:type"        content="website" />
+    <meta property="og:title"       content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:image"       content="/og-image.png" />
+  </head>
+  <body class="bg-[#0a0f0d] text-[#f0eeea] font-sans antialiased selection:bg-bridge-900 selection:text-bridge-200">
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,726 @@
+---
+import type { Translations } from '../i18n/en';
+
+interface Props { t: Translations; }
+const { t } = Astro.props;
+const g = t.generator;
+---
+
+<section id="generator" class="py-24 sm:py-32">
+  <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+
+    <div class="mx-auto max-w-2xl text-center mb-12">
+      <h2 class="font-mono text-3xl font-medium text-[#f0eeea] sm:text-4xl">{g.title}</h2>
+      <p class="mt-4 text-sm text-[#888780] leading-relaxed">{g.subtitle}</p>
+    </div>
+
+    <div class="rounded-xl border border-bridge-950/60 bg-[#0a0f0d] overflow-hidden">
+
+      {/* Header */}
+      <div class="border-b border-bridge-950/60 px-6 py-4 bg-[#080d0b]">
+        <p class="font-mono text-xs text-bridge-700 uppercase tracking-widest">compose generator</p>
+      </div>
+
+      <div class="p-6 sm:p-8 space-y-8">
+
+        {/* Base services */}
+        <div>
+          <p class="font-mono text-xs text-bridge-600 uppercase tracking-widest mb-3">{g.section_base}</p>
+          <div class="flex items-center gap-3 rounded-lg border border-bridge-900/40 bg-bridge-950/30 px-4 py-3">
+            <span class="text-bridge-300">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="font-mono text-sm text-bridge-200">openbridge server</span>
+            <span class="text-[#444441] mx-1">+</span>
+            <span class="font-mono text-sm text-bridge-200">Mosquitto</span>
+            <span class="ml-auto font-mono text-xs text-bridge-800">{g.base_desc}</span>
+          </div>
+        </div>
+
+        {/* Optional services */}
+        <div>
+          <p class="font-mono text-xs text-bridge-600 uppercase tracking-widest mb-3">{g.section_optional}</p>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+
+            {/* InfluxDB */}
+            <div class="rounded-lg border border-bridge-950/60 p-4">
+              <p class="font-mono text-xs font-medium text-[#f0eeea] mb-3">{g.influx_label}</p>
+              <div class="flex flex-col gap-2" id="influx-options">
+                {(['influx_none', 'influx1', 'influx2', 'influx3'] as const).map((v) => (
+                  <label class="flex items-center gap-2.5 cursor-pointer group">
+                    <input
+                      type="radio"
+                      name="influx"
+                      value={v}
+                      class="h-3.5 w-3.5 accent-bridge-500"
+                      checked={v === 'influx_none'}
+                    />
+                    <span class="font-mono text-xs text-[#888780] group-hover:text-bridge-400 transition">
+                      {g.version_labels[v]}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Grafana */}
+            <div class="rounded-lg border border-bridge-950/60 p-4">
+              <p class="font-mono text-xs font-medium text-[#f0eeea] mb-3">{g.grafana_label}</p>
+              <div class="flex flex-col gap-2" id="grafana-options">
+                {(['grafana_none', 'grafana_ce', 'grafana_ent'] as const).map((v) => (
+                  <label class="flex items-center gap-2.5 cursor-pointer group">
+                    <input
+                      type="radio"
+                      name="grafana"
+                      value={v}
+                      class="h-3.5 w-3.5 accent-bridge-500"
+                      checked={v === 'grafana_none'}
+                    />
+                    <span class="font-mono text-xs text-[#888780] group-hover:text-bridge-400 transition">
+                      {g.version_labels[v]}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Reverse Proxy */}
+            <div class="rounded-lg border border-bridge-950/60 p-4">
+              <p class="font-mono text-xs font-medium text-[#f0eeea] mb-3">{g.proxy_label}</p>
+              <div class="flex flex-col gap-2" id="proxy-options">
+                {(['proxy_none', 'proxy_caddy', 'proxy_nginx', 'proxy_npm'] as const).map((v) => (
+                  <label class="flex items-center gap-2.5 cursor-pointer group">
+                    <input
+                      type="radio"
+                      name="proxy"
+                      value={v}
+                      class="h-3.5 w-3.5 accent-bridge-500"
+                      checked={v === 'proxy_none'}
+                    />
+                    <span class="font-mono text-xs text-[#888780] group-hover:text-bridge-400 transition">
+                      {g.version_labels[v]}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Configuration */}
+        <div>
+          <p class="font-mono text-xs text-bridge-600 uppercase tracking-widest mb-3">{g.config_title}</p>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div>
+              <label class="block font-mono text-xs text-[#888780] mb-1.5">{g.domain}</label>
+              <input
+                id="cfg-domain"
+                type="text"
+                placeholder={g.domain_placeholder}
+                value="obs.example.com"
+                class="w-full rounded-md border border-bridge-950/60 bg-[#080d0b] px-3 py-2 font-mono text-xs text-[#f0eeea] placeholder-[#333330] focus:border-bridge-700 focus:outline-none transition"
+              />
+            </div>
+            <div>
+              <label class="block font-mono text-xs text-[#888780] mb-1.5">{g.timezone}</label>
+              <input
+                id="cfg-tz"
+                type="text"
+                placeholder={g.timezone_placeholder}
+                value="Europe/Zurich"
+                class="w-full rounded-md border border-bridge-950/60 bg-[#080d0b] px-3 py-2 font-mono text-xs text-[#f0eeea] placeholder-[#333330] focus:border-bridge-700 focus:outline-none transition"
+              />
+            </div>
+            <div id="port-field">
+              <label class="block font-mono text-xs text-[#888780] mb-1.5">{g.obs_port}</label>
+              <input
+                id="cfg-port"
+                type="text"
+                placeholder="8080"
+                value="8080"
+                class="w-full rounded-md border border-bridge-950/60 bg-[#080d0b] px-3 py-2 font-mono text-xs text-[#f0eeea] placeholder-[#333330] focus:border-bridge-700 focus:outline-none transition"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Generate button */}
+        <button
+          id="generate-btn"
+          class="w-full rounded-lg bg-bridge-700 py-3 font-mono text-sm font-medium text-[#f0eeea] transition hover:bg-bridge-600 active:scale-[0.99]"
+        >
+          {g.generate_btn}
+        </button>
+
+        {/* Output area */}
+        <div id="output-area" class="hidden">
+          <p class="font-mono text-xs text-bridge-600 uppercase tracking-widest mb-3">{g.output_title}</p>
+
+          {/* Tab bar */}
+          <div id="output-tabs" class="flex gap-1 rounded-lg border border-bridge-950/60 bg-[#080d0b] p-1 mb-0 overflow-x-auto"></div>
+
+          {/* Code pane */}
+          <div class="rounded-b-xl border border-t-0 border-bridge-950/60 bg-[#050807] overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 border-b border-bridge-950/40 bg-[#080d0b]">
+              <div class="flex gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full bg-bridge-950"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-bridge-950"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-bridge-950"></span>
+              </div>
+              <div class="flex gap-2">
+                <button
+                  id="copy-output"
+                  class="font-mono text-[10px] text-bridge-700 hover:text-bridge-400 transition px-2 py-0.5 rounded border border-bridge-950/60 hover:border-bridge-800"
+                >
+                  {g.copy}
+                </button>
+                <button
+                  id="download-output"
+                  class="font-mono text-[10px] text-bridge-700 hover:text-bridge-400 transition px-2 py-0.5 rounded border border-bridge-950/60 hover:border-bridge-800"
+                >
+                  {g.download}
+                </button>
+              </div>
+            </div>
+            <pre id="output-code" class="overflow-x-auto px-4 py-4 font-mono text-xs leading-relaxed text-bridge-200 max-h-[500px] overflow-y-auto"></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    {/* Note: InfluxDB 3 */}
+    <p id="influx3-note" class="hidden mt-4 text-xs text-[#666663] text-center italic">{g.note_influx3}</p>
+
+  </div>
+</section>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// Docker Compose Generator — pure client-side JS
+// ─────────────────────────────────────────────────────────────
+
+interface GenConfig {
+  influx: 'influx_none' | 'influx1' | 'influx2' | 'influx3';
+  grafana: 'grafana_none' | 'grafana_ce' | 'grafana_ent';
+  proxy: 'proxy_none' | 'proxy_caddy' | 'proxy_nginx' | 'proxy_npm';
+  domain: string;
+  tz: string;
+  port: string;
+}
+
+// ── helpers ──────────────────────────────────────────────────
+function indent(s: string, n: number): string {
+  return s.split('\n').map(l => ' '.repeat(n) + l).join('\n');
+}
+
+// ── generate docker-compose.yml ───────────────────────────────
+function genCompose(c: GenConfig): string {
+  const hasInflux  = c.influx  !== 'influx_none';
+  const hasGrafana = c.grafana !== 'grafana_none';
+  const hasProxy   = c.proxy   !== 'proxy_none';
+  const exposePort = !hasProxy;
+
+  // Reverse-proxy network note
+  const obsNetworks = `    networks:\n      - obs_net`;
+
+  // ── mosquitto ──
+  const mosquitto = `  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "\\$\\$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - mosquitto_passwd:/mosquitto/passwd
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    networks:
+      - obs_net`;
+
+  // ── obs ──
+  const obsPortMapping = exposePort
+    ? `    ports:\n      - "\${OBS_PORT:-${c.port}}:8080"`
+    : `    expose:\n      - "8080"`;
+
+  const obsInfluxEnv = hasInflux ? `
+      OBS_HISTORY__BACKEND: influxdb` : '';
+
+  const obs = `  obs:
+    image: ghcr.io/abeggled/openbridgeserver:latest
+    # build: .
+    restart: unless-stopped
+    pid: "service:mosquitto"
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    environment:
+      OBS_JWT_SECRET: \${OBS_JWT_SECRET}
+      OBS_MQTT_USERNAME: \${OBS_MQTT_USERNAME}
+      OBS_MQTT_PASSWORD: \${OBS_MQTT_PASSWORD}
+      OBS_SERVER__LOG_LEVEL: \${OBS_LOG_LEVEL:-INFO}
+      TZ: ${c.tz}${obsInfluxEnv}
+    volumes:
+      - obs_data:/data
+      - mosquitto_passwd:/mosquitto/passwd
+${obsPortMapping}
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/api/v1/system/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - obs_net`;
+
+  // ── influxdb ──
+  let influxdb = '';
+  if (c.influx === 'influx1') {
+    influxdb = `
+  influxdb:
+    image: influxdb:1.11-alpine
+    restart: unless-stopped
+    environment:
+      INFLUXDB_DB: obs
+      INFLUXDB_ADMIN_USER: admin
+      INFLUXDB_ADMIN_PASSWORD: \${INFLUXDB_ADMIN_PASSWORD}
+      INFLUXDB_HTTP_AUTH_ENABLED: "true"
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+    expose:
+      - "8086"
+    networks:
+      - obs_net`;
+  } else if (c.influx === 'influx2') {
+    influxdb = `
+  influxdb:
+    image: influxdb:2.7-alpine
+    restart: unless-stopped
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: \${INFLUXDB_PASSWORD}
+      DOCKER_INFLUXDB_INIT_ORG: obs
+      DOCKER_INFLUXDB_INIT_BUCKET: obs
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: \${INFLUXDB_TOKEN}
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    expose:
+      - "8086"
+    networks:
+      - obs_net`;
+  } else if (c.influx === 'influx3') {
+    influxdb = `
+  influxdb:
+    image: influxdb:3-core
+    restart: unless-stopped
+    command: ["serve", "--object-store", "file", "--data-dir", "/var/lib/influxdb3", "--node-id", "obs"]
+    volumes:
+      - influxdb_data:/var/lib/influxdb3
+    expose:
+      - "8086"
+    networks:
+      - obs_net`;
+  }
+
+  // ── grafana ──
+  let grafana = '';
+  if (hasGrafana) {
+    const grafanaImage = c.grafana === 'grafana_ent'
+      ? 'grafana/grafana-enterprise:latest'
+      : 'grafana/grafana:latest';
+    const grafanaDeps = hasInflux
+      ? `    depends_on:\n      - influxdb\n`
+      : '';
+    const grafanaPort = hasProxy ? `    expose:\n      - "3000"` : `    ports:\n      - "\${GRAFANA_PORT:-3000}:3000"`;
+    grafana = `
+  grafana:
+    image: ${grafanaImage}
+    restart: unless-stopped
+${grafanaDeps}    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: \${GRAFANA_PASSWORD}
+      GF_SERVER_ROOT_URL: ${hasProxy ? `https://${c.domain}` : `http://localhost:3000`}
+      TZ: ${c.tz}
+    volumes:
+      - grafana_data:/var/lib/grafana
+${grafanaPort}
+    networks:
+      - obs_net`;
+  }
+
+  // ── reverse proxy ──
+  let proxyService = '';
+  if (c.proxy === 'proxy_caddy') {
+    proxyService = `
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      obs:
+        condition: service_healthy
+    networks:
+      - obs_net`;
+  } else if (c.proxy === 'proxy_nginx') {
+    proxyService = `
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      obs:
+        condition: service_healthy
+    networks:
+      - obs_net`;
+  } else if (c.proxy === 'proxy_npm') {
+    proxyService = `
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - obs_net`;
+  }
+
+  // ── volumes ──
+  const vols = [
+    'obs_data: {}',
+    'mosquitto_passwd: {}',
+    'mosquitto_data: {}',
+    'mosquitto_log: {}',
+  ];
+  if (hasInflux)  vols.push('influxdb_data: {}');
+  if (hasGrafana) vols.push('grafana_data: {}');
+  if (c.proxy === 'proxy_caddy')  { vols.push('caddy_data: {}', 'caddy_config: {}'); }
+  if (c.proxy === 'proxy_npm')    { vols.push('npm_data: {}', 'npm_letsencrypt: {}'); }
+
+  const volsBlock = vols.map(v => `  ${v}`).join('\n');
+
+  return `# Generated by openbridge server Compose Generator
+# https://open-bridge.io
+# InfluxDB: ${c.influx === 'influx_none' ? 'none' : c.influx}
+# Grafana:  ${c.grafana === 'grafana_none' ? 'none' : c.grafana}
+# Proxy:    ${c.proxy === 'proxy_none' ? 'none' : c.proxy}
+# Domain:   ${c.domain}
+
+services:
+
+${mosquitto}
+
+${obs}${influxdb}${grafana}${proxyService}
+
+volumes:
+${volsBlock}
+
+networks:
+  obs_net:
+    driver: bridge
+`;
+}
+
+// ── generate .env.example ─────────────────────────────────────
+function genEnv(c: GenConfig): string {
+  const hasInflux  = c.influx  !== 'influx_none';
+  const hasGrafana = c.grafana !== 'grafana_none';
+  const hasProxy   = c.proxy   !== 'proxy_none';
+
+  let out = `# openbridge server environment
+# Copy to .env and fill in your values
+
+# ── openbridge server ──────────────────────────────────────────
+# Required: change to a random 32+ character string
+OBS_JWT_SECRET=change-this-to-a-random-secret-min-32-chars
+
+# MQTT service account (used internally)
+OBS_MQTT_USERNAME=obs
+OBS_MQTT_PASSWORD=change-this-mqtt-service-password
+
+# Log level: DEBUG | INFO | WARNING | ERROR
+OBS_LOG_LEVEL=INFO
+
+`;
+
+  if (!hasProxy) {
+    out += `# Port to expose OBS on (no reverse proxy)
+OBS_PORT=${c.port}
+
+`;
+  }
+
+  if (c.influx === 'influx1') {
+    out += `# ── InfluxDB 1.x ──────────────────────────────────────────────
+INFLUXDB_ADMIN_PASSWORD=change-this-influx-admin-password
+
+`;
+  } else if (c.influx === 'influx2') {
+    out += `# ── InfluxDB 2.x ──────────────────────────────────────────────
+INFLUXDB_PASSWORD=change-this-influx-admin-password
+INFLUXDB_TOKEN=change-this-influx-admin-token-min-32-chars
+
+`;
+  } else if (c.influx === 'influx3') {
+    out += `# ── InfluxDB 3 Core ───────────────────────────────────────────
+# InfluxDB 3 uses token auth configured at first startup.
+# After startup: configure in OBS Settings → History Backend.
+
+`;
+  }
+
+  if (hasGrafana) {
+    out += `# ── Grafana ──────────────────────────────────────────────────
+GRAFANA_PASSWORD=change-this-grafana-admin-password
+`;
+    if (!hasProxy) out += `GRAFANA_PORT=3000\n`;
+    out += `\n`;
+  }
+
+  if (hasProxy) {
+    out += `# ── Reverse Proxy ─────────────────────────────────────────────
+# Domain used in Caddyfile/nginx.conf
+DOMAIN=${c.domain}
+
+`;
+  }
+
+  return out;
+}
+
+// ── generate Caddyfile ───────────────────────────────────────
+function genCaddyfile(c: GenConfig): string {
+  const hasGrafana = c.grafana !== 'grafana_none';
+  let out = `# Caddyfile — generated by openbridge server Compose Generator
+# Place this next to your docker-compose.yml
+
+${c.domain} {
+    reverse_proxy obs:8080
+}
+
+`;
+  if (hasGrafana) {
+    out += `grafana.${c.domain} {
+    reverse_proxy grafana:3000
+}
+
+`;
+  }
+  out += `# Demo instance (if running a separate demo container)
+# demo.${c.domain} {
+#     reverse_proxy demo-obs:8080
+# }
+`;
+  return out;
+}
+
+// ── generate nginx.conf ──────────────────────────────────────
+function genNginx(c: GenConfig): string {
+  const hasGrafana = c.grafana !== 'grafana_none';
+  let upstream = `    upstream obs_backend {\n        server obs:8080;\n    }`;
+  if (hasGrafana) {
+    upstream += `\n    upstream grafana_backend {\n        server grafana:3000;\n    }`;
+  }
+  let servers = `    server {
+        listen 80;
+        server_name ${c.domain};
+        # Redirect HTTP → HTTPS
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name ${c.domain};
+
+        ssl_certificate     /etc/nginx/certs/${c.domain}.crt;
+        ssl_certificate_key /etc/nginx/certs/${c.domain}.key;
+
+        location / {
+            proxy_pass         http://obs_backend;
+            proxy_http_version 1.1;
+            proxy_set_header   Upgrade $http_upgrade;
+            proxy_set_header   Connection "upgrade";
+            proxy_set_header   Host $host;
+            proxy_set_header   X-Real-IP $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header   X-Forwarded-Proto $scheme;
+        }
+    }`;
+
+  if (hasGrafana) {
+    servers += `
+
+    server {
+        listen 443 ssl;
+        server_name grafana.${c.domain};
+
+        ssl_certificate     /etc/nginx/certs/grafana.${c.domain}.crt;
+        ssl_certificate_key /etc/nginx/certs/grafana.${c.domain}.key;
+
+        location / {
+            proxy_pass http://grafana_backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+    }`;
+  }
+
+  return `# nginx.conf — generated by openbridge server Compose Generator
+# Place this next to your docker-compose.yml
+
+events {
+    worker_connections 1024;
+}
+
+http {
+${upstream}
+
+${servers}
+}
+`;
+}
+
+// ── state ────────────────────────────────────────────────────
+type TabKey = 'compose' | 'env' | 'caddyfile' | 'nginx';
+
+const state: {
+  files: Record<TabKey, string>;
+  activeTab: TabKey;
+} = {
+  files: { compose: '', env: '', caddyfile: '', nginx: '' },
+  activeTab: 'compose',
+};
+
+// ── DOM refs ──────────────────────────────────────────────────
+const generateBtn   = document.getElementById('generate-btn') as HTMLButtonElement;
+const outputArea    = document.getElementById('output-area') as HTMLElement;
+const outputTabs    = document.getElementById('output-tabs') as HTMLElement;
+const outputCode    = document.getElementById('output-code') as HTMLElement;
+const copyBtn       = document.getElementById('copy-output') as HTMLButtonElement;
+const downloadBtn   = document.getElementById('download-output') as HTMLButtonElement;
+const influx3Note   = document.getElementById('influx3-note') as HTMLElement;
+const portField     = document.getElementById('port-field') as HTMLElement;
+
+function getConfig(): GenConfig {
+  return {
+    influx:  (document.querySelector<HTMLInputElement>('input[name="influx"]:checked')?.value ?? 'influx_none') as GenConfig['influx'],
+    grafana: (document.querySelector<HTMLInputElement>('input[name="grafana"]:checked')?.value ?? 'grafana_none') as GenConfig['grafana'],
+    proxy:   (document.querySelector<HTMLInputElement>('input[name="proxy"]:checked')?.value ?? 'proxy_none') as GenConfig['proxy'],
+    domain:  (document.getElementById('cfg-domain') as HTMLInputElement).value.trim() || 'obs.example.com',
+    tz:      (document.getElementById('cfg-tz') as HTMLInputElement).value.trim() || 'Europe/Zurich',
+    port:    (document.getElementById('cfg-port') as HTMLInputElement).value.trim() || '8080',
+  };
+}
+
+function buildTabs(cfg: GenConfig) {
+  const hasProxy   = cfg.proxy !== 'proxy_none';
+  const tabs: { key: TabKey; label: string }[] = [
+    { key: 'compose', label: 'docker-compose.yml' },
+    { key: 'env',     label: '.env.example' },
+  ];
+  if (cfg.proxy === 'proxy_caddy') tabs.push({ key: 'caddyfile', label: 'Caddyfile' });
+  if (cfg.proxy === 'proxy_nginx') tabs.push({ key: 'nginx',     label: 'nginx.conf' });
+
+  outputTabs.innerHTML = '';
+  tabs.forEach(({ key, label }) => {
+    const btn = document.createElement('button');
+    btn.textContent = label;
+    btn.className = 'gen-tab flex-shrink-0 rounded-md px-3 py-1.5 font-mono text-xs transition';
+    btn.dataset.tab = key;
+    btn.addEventListener('click', () => switchTab(key));
+    outputTabs.appendChild(btn);
+  });
+}
+
+function switchTab(tab: TabKey) {
+  state.activeTab = tab;
+  outputCode.textContent = state.files[tab] ?? '';
+
+  document.querySelectorAll<HTMLElement>('.gen-tab').forEach(b => {
+    const on = b.dataset.tab === tab;
+    b.className = on
+      ? 'gen-tab flex-shrink-0 rounded-md px-3 py-1.5 font-mono text-xs transition bg-bridge-900/60 text-bridge-200'
+      : 'gen-tab flex-shrink-0 rounded-md px-3 py-1.5 font-mono text-xs transition text-[#555552] hover:text-bridge-400';
+  });
+}
+
+function generate() {
+  const cfg = getConfig();
+  state.files.compose   = genCompose(cfg);
+  state.files.env       = genEnv(cfg);
+  state.files.caddyfile = genCaddyfile(cfg);
+  state.files.nginx     = genNginx(cfg);
+
+  buildTabs(cfg);
+  outputArea.classList.remove('hidden');
+  switchTab('compose');
+
+  // InfluxDB 3 note
+  influx3Note?.classList.toggle('hidden', cfg.influx !== 'influx3');
+
+  // Port field visibility
+  portField?.classList.toggle('hidden', cfg.proxy !== 'proxy_none');
+
+  outputArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+generateBtn?.addEventListener('click', generate);
+
+// Show/hide port field when proxy changes
+document.querySelectorAll<HTMLInputElement>('input[name="proxy"]').forEach(r =>
+  r.addEventListener('change', () => {
+    if (portField) {
+      portField.classList.toggle('hidden', r.value !== 'proxy_none');
+    }
+  })
+);
+
+// Copy
+copyBtn?.addEventListener('click', async () => {
+  await navigator.clipboard.writeText(state.files[state.activeTab] ?? '');
+  const orig = copyBtn.textContent;
+  copyBtn.textContent = 'Copied!';
+  copyBtn.classList.add('text-bridge-300');
+  setTimeout(() => { copyBtn.textContent = orig; copyBtn.classList.remove('text-bridge-300'); }, 2000);
+});
+
+// Download
+downloadBtn?.addEventListener('click', () => {
+  const content  = state.files[state.activeTab] ?? '';
+  const names: Record<TabKey, string> = {
+    compose:   'docker-compose.yml',
+    env:       '.env.example',
+    caddyfile: 'Caddyfile',
+    nginx:     'nginx.conf',
+  };
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = names[state.activeTab];
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Auto-generate on first load with defaults
+generate();
+</script>

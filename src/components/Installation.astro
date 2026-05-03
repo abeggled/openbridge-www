@@ -1,0 +1,116 @@
+---
+import type { Translations } from '../i18n/en';
+
+interface Props { t: Translations; }
+const { t } = Astro.props;
+const i = t.install;
+---
+
+<section id="install" class="py-24 sm:py-32 bg-[#080d0b]">
+  <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+
+    <div class="mx-auto max-w-2xl text-center mb-12">
+      <h2 class="font-mono text-3xl font-medium text-[#f0eeea] sm:text-4xl">{i.title}</h2>
+      <p class="mt-4 text-sm text-[#888780]">{i.subtitle}</p>
+    </div>
+
+    {/* Tab bar */}
+    <div class="flex gap-1 rounded-lg border border-bridge-950/60 bg-[#0a0f0d] p-1 mb-8">
+      {(['docker', 'lxc', 'native'] as const).map((tab) => (
+        <button
+          data-tab={tab}
+          class="install-tab flex-1 rounded-md px-4 py-2 font-mono text-xs font-medium transition"
+          data-active="false"
+        >
+          {i.tabs[tab]}
+        </button>
+      ))}
+    </div>
+
+    {/* Panels */}
+    {(['docker', 'lxc', 'native'] as const).map((tab) => {
+      const panel = i[tab];
+      return (
+        <div data-panel={tab} class="install-panel hidden">
+          <p class="text-sm text-[#888780] leading-relaxed mb-8">{panel.intro}</p>
+
+          <div class="flex flex-col gap-6">
+            {panel.steps.map((step, idx) => (
+              <div class="flex gap-4">
+                {/* Step number */}
+                <div class="flex-shrink-0 flex h-7 w-7 items-center justify-center rounded-full border border-bridge-900/60 font-mono text-xs text-bridge-600">
+                  {idx + 1}
+                </div>
+
+                <div class="flex-1 min-w-0 pt-0.5">
+                  <p class="font-mono text-sm font-medium text-[#f0eeea] mb-2">{step.title}</p>
+
+                  {'code' in step && step.code && (
+                    <div class="relative group/code rounded-lg border border-bridge-950/60 bg-[#050807] overflow-hidden">
+                      <div class="flex items-center justify-between px-3 py-1.5 border-b border-bridge-950/40">
+                        <div class="flex gap-1.5">
+                          <span class="h-2.5 w-2.5 rounded-full bg-bridge-950"></span>
+                          <span class="h-2.5 w-2.5 rounded-full bg-bridge-950"></span>
+                          <span class="h-2.5 w-2.5 rounded-full bg-bridge-950"></span>
+                        </div>
+                        <button
+                          class="copy-btn opacity-0 group-hover/code:opacity-100 transition font-mono text-[10px] text-bridge-700 hover:text-bridge-400 px-2 py-0.5 rounded"
+                          data-code={step.code}
+                        >
+                          copy
+                        </button>
+                      </div>
+                      <pre class="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-bridge-200"><code>{step.code}</code></pre>
+                    </div>
+                  )}
+
+                  {'note' in step && step.note && (
+                    <p class="mt-2 text-xs text-[#666663] italic">{step.note}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div class="mt-8 rounded-lg border-l-2 border-bridge-700 bg-bridge-950/20 px-4 py-3">
+            <p class="text-xs text-bridge-400 leading-relaxed">
+              <span class="font-mono font-medium text-bridge-300">Tip: </span>
+              {panel.tip}
+            </p>
+          </div>
+        </div>
+      );
+    })}
+
+  </div>
+</section>
+
+<script>
+  const tabs   = document.querySelectorAll<HTMLButtonElement>('.install-tab');
+  const panels = document.querySelectorAll<HTMLElement>('.install-panel');
+
+  function activate(name: string) {
+    tabs.forEach(t => {
+      const on = t.dataset.tab === name;
+      t.dataset.active = String(on);
+      t.className = on
+        ? 'install-tab flex-1 rounded-md px-4 py-2 font-mono text-xs font-medium transition bg-bridge-900/60 text-bridge-200'
+        : 'install-tab flex-1 rounded-md px-4 py-2 font-mono text-xs font-medium transition text-[#555552] hover:text-bridge-400';
+    });
+    panels.forEach(p => p.classList.toggle('hidden', p.dataset.panel !== name));
+  }
+
+  tabs.forEach(t => t.addEventListener('click', () => activate(t.dataset.tab!)));
+  activate('docker');
+
+  // Copy buttons
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(btn.dataset.code ?? '');
+      const orig = btn.textContent;
+      btn.textContent = 'copied!';
+      btn.classList.add('text-bridge-300');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('text-bridge-300'); }, 1800);
+    });
+  });
+</script>

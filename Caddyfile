@@ -1,0 +1,52 @@
+# Caddyfile — openbridge server website
+# Production: www.open-bridge.io + open-bridge.io
+# Beta:       beta.open-bridge.io
+# Demo:       demo.open-bridge.io
+
+# ── Redirect apex to www ────────────────────────────────────────
+open-bridge.io {
+    redir https://www.open-bridge.io{uri} permanent
+}
+
+# ── Production website ──────────────────────────────────────────
+www.open-bridge.io {
+    root * /var/www/openbridge-www/dist
+    file_server
+
+    # SPA-style fallback (handles /en/, /de/ routes)
+    try_files {path} {path}/ /index.html
+
+    # Cache static assets aggressively
+    @static {
+        path *.js *.css *.svg *.png *.ico *.woff2 *.woff
+    }
+    header @static Cache-Control "public, max-age=31536000, immutable"
+
+    # Security headers
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy strict-origin-when-cross-origin
+        -Server
+    }
+
+    encode gzip
+}
+
+# ── Beta website ────────────────────────────────────────────────
+beta.open-bridge.io {
+    root * /var/www/openbridge-www-beta/dist
+    file_server
+
+    try_files {path} {path}/ /index.html
+
+    # No caching on beta
+    header Cache-Control "no-store"
+
+    encode gzip
+}
+
+# ── Demo OBS instance ───────────────────────────────────────────
+demo.open-bridge.io {
+    reverse_proxy obs:8080
+}

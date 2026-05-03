@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Hero from '../../components/Hero.astro';
+import WhatIs from '../../components/WhatIs.astro';
+import Protocols from '../../components/Protocols.astro';
+import Features from '../../components/Features.astro';
+import Installation from '../../components/Installation.astro';
+import ComposeGenerator from '../../components/ComposeGenerator.astro';
+import Footer from '../../components/Footer.astro';
+import { en as t } from '../../i18n/en';
+
+const lang = 'en' as const;
+---
+
+<Layout t={t} lang={lang}>
+  <Header t={t} lang={lang} />
+  <main>
+    <Hero t={t} lang={lang} />
+    <WhatIs t={t} />
+    <Protocols t={t} />
+    <Features t={t} />
+    <Installation t={t} />
+    <ComposeGenerator t={t} />
+  </main>
+  <Footer t={t} lang={lang} />
+</Layout>
