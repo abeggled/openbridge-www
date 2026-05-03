@@ -289,7 +289,7 @@ export const en = {
     issues: 'Report Issue',
     links_title: 'Links',
     legal_title: 'Legal',
-    copyright: '© 2025 openbridge server contributors',
+    copyright: '© 2026 openbridge server contributors',
   },
 };
 

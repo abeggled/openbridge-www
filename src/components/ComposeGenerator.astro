@@ -525,11 +525,6 @@ ${c.domain} {
 
 `;
   }
-  out += `# Demo instance (if running a separate demo container)
-# demo.${c.domain} {
-#     reverse_proxy demo-obs:8080
-# }
-`;
   return out;
 }
 
@@ -680,10 +675,12 @@ function generate() {
   // Port field visibility
   portField?.classList.toggle('hidden', cfg.proxy !== 'proxy_none');
 
-  outputArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-generateBtn?.addEventListener('click', generate);
+generateBtn?.addEventListener('click', () => {
+  generate();
+  outputArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
 
 // Show/hide port field when proxy changes
 document.querySelectorAll<HTMLInputElement>('input[name="proxy"]').forEach(r =>
@@ -721,6 +718,6 @@ downloadBtn?.addEventListener('click', () => {
   URL.revokeObjectURL(url);
 });
 
-// Auto-generate on first load with defaults
+// Generate on first load without scrolling
 generate();
 </script>

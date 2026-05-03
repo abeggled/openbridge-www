@@ -16,7 +16,7 @@ const i = t.install;
 
     {/* Tab bar */}
     <div class="flex gap-1 rounded-lg border border-bridge-950/60 bg-[#0a0f0d] p-1 mb-8">
-      {(['docker', 'lxc', 'native'] as const).map((tab) => (
+      {(['docker', 'lxc'] as const).map((tab) => (
         <button
           data-tab={tab}
           class="install-tab flex-1 rounded-md px-4 py-2 font-mono text-xs font-medium transition"
@@ -28,7 +28,7 @@ const i = t.install;
     </div>
 
     {/* Panels */}
-    {(['docker', 'lxc', 'native'] as const).map((tab) => {
+    {(['docker', 'lxc'] as const).map((tab) => {
       const panel = i[tab];
       return (
         <div data-panel={tab} class="install-panel hidden">

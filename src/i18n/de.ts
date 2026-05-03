@@ -291,6 +291,6 @@ export const de: Translations = {
     issues: 'Problem melden',
     links_title: 'Links',
     legal_title: 'Rechtliches',
-    copyright: '© 2025 openbridge server Mitwirkende',
+    copyright: '© 2026 openbridge server Mitwirkende',
   },
 };
