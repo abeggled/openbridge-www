@@ -1,15 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # deploy.sh — Build and deploy openbridge-www
 #
 # Usage:
 #   ./deploy.sh            → deploy to production  (www.open-bridge.io)
-#   ./deploy.sh beta       → deploy to beta         (beta.open-bridge.io)
-#
-# Requirements on the server:
-#   - Node.js 20+ and npm
-#   - /var/www/openbridge-www/      (production target)
-#   - /var/www/openbridge-www-beta/ (beta target)
-#   - Caddy running with the Caddyfile in this repo
+#   ./deploy.sh beta       → deploy to beta         (beta.www.open-bridge.io)
 
 set -euo pipefail
 
@@ -25,7 +19,7 @@ echo ""
 echo "→ Pulling latest code..."
 git fetch origin
 
-if [[ "$TARGET" == "beta" ]]; then
+if [ "$TARGET" = "beta" ]; then
     if git show-ref --quiet refs/heads/beta; then
         git checkout beta
     else
@@ -50,20 +44,22 @@ echo "→ Building..."
 npm run build
 
 # ── 4. Deploy ───────────────────────────────────────────────────
-if [[ "$TARGET" == "beta" ]]; then
-    echo "→ Deploying to beta: ${BETA_DIR}/dist"
-    mkdir -p "${BETA_DIR}"
-    rsync -a --delete dist/ "${BETA_DIR}/dist/"
+if [ "$TARGET" = "beta" ]; then
+    DEST="${BETA_DIR}"
+    echo "→ Deploying to beta: ${DEST}/dist"
 else
-    echo "→ Deploying to production: ${PROD_DIR}/dist"
-    mkdir -p "${PROD_DIR}"
-    rsync -a --delete dist/ "${PROD_DIR}/dist/"
+    DEST="${PROD_DIR}"
+    echo "→ Deploying to production: ${DEST}/dist"
 fi
+
+mkdir -p "${DEST}"
+rm -rf "${DEST}/dist"
+cp -r dist "${DEST}/dist"
 
 echo ""
 echo "✓ Done! Deployed to ${TARGET}."
-if [[ "$TARGET" == "beta" ]]; then
-    echo "  → https://beta.open-bridge.io"
+if [ "$TARGET" = "beta" ]; then
+    echo "  → https://beta.www.open-bridge.io"
 else
     echo "  → https://www.open-bridge.io"
 fi
