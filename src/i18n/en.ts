@@ -69,6 +69,7 @@ export const en = {
     subtitle:
       'Each protocol runs as a fully independent adapter. Run multiple instances of the same protocol simultaneously — with separate configurations.',
     badge_planned: 'Planned',
+    multi_note: 'Multiple simultaneous instances — each protocol can run several independent configurations in parallel.',
     items: [
       {
         name: 'KNX / IP',

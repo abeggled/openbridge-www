@@ -71,6 +71,7 @@ export const de: Translations = {
     subtitle:
       'Jedes Protokoll läuft als vollständig unabhängiger Adapter. Mehrere Instanzen desselben Protokolls gleichzeitig — jede mit eigener Konfiguration.',
     badge_planned: 'Geplant',
+    multi_note: 'Mehrere simultane Instanzen — jedes Protokoll kann mehrere unabhängige Konfigurationen parallel betreiben.',
     items: [
       {
         name: 'KNX / IP',
