@@ -220,66 +220,124 @@ function genCompose(c: GenConfig): string {
   const hasInflux  = c.influx  !== 'influx_none';
   const hasGrafana = c.grafana !== 'grafana_none';
   const hasProxy   = c.proxy   !== 'proxy_none';
-  const exposePort = !hasProxy;
 
-  // Reverse-proxy network note
-  const obsNetworks = `    networks:\n      - obs_net`;
+  // Network block appended to each service only when a proxy is present.
+  // Without proxy Docker Compose's default network is sufficient.
+  const svcNet = hasProxy ? `\n    networks:\n      - obs_net` : '';
 
-  // ── mosquitto ──
-  const mosquitto = `  mosquitto:
+  // ── inline mosquitto config (no external file needed) ────────
+  const configsBlock = `configs:
+  mosquitto_conf:
+    content: |
+      allow_anonymous false
+      password_file /mosquitto/passwd/passwd
+
+      listener 1883
+      protocol mqtt
+
+      listener 9001
+      protocol websockets
+
+      persistence true
+      persistence_location /mosquitto/data/
+
+      log_dest file /mosquitto/log/mosquitto.log
+      log_dest stdout
+      log_type error
+      log_type warning
+      log_type notice
+
+      max_connections 100
+      max_keepalive 120`;
+
+  // ── mosquitto ─────────────────────────────────────────────────
+  const mosquitto = `  # ── MQTT Broker ──────────────────────────────────────────────────────────
+  obs_mqtt:
     image: eclipse-mosquitto:2
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "mosquitto_sub", "-t", "\\$\\$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    container_name: obs_mqtt
+    user: root
+    command: >
+      sh -c "
+      mkdir -p /mosquitto/passwd &&
+      chmod 777 /mosquitto/passwd &&
+      rm -f /mosquitto/passwd/passwd &&
+      mosquitto_passwd -c -b /mosquitto/passwd/passwd \$\$MQTT_SVC_USER \$\$MQTT_SVC_PASS &&
+      chmod 644 /mosquitto/passwd/passwd &&
+      exec mosquitto -c /mosquitto/config/mosquitto.conf
+      "
+    environment:
+      MQTT_SVC_USER: \${OBS_MQTT_USERNAME:-obs}
+      MQTT_SVC_PASS: \${OBS_MQTT_PASSWORD:-changeme}
+    configs:
+      - source: mosquitto_conf
+        target: /mosquitto/config/mosquitto.conf
+        mode: 0444
     volumes:
       - mosquitto_passwd:/mosquitto/passwd
       - mosquitto_data:/mosquitto/data
       - mosquitto_log:/mosquitto/log
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
-    networks:
-      - obs_net`;
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "\$\$SYS/#", "-C", "1", "-i", "healthcheck",
+             "-u", "\${OBS_MQTT_USERNAME:-obs}", "-P", "\${OBS_MQTT_PASSWORD:-changeme}",
+             "-W", "3"]
+      interval: 10s
+      timeout: 5s
+      retries: 3${svcNet}`;
 
-  // ── obs ──
-  const obsPortMapping = exposePort
-    ? `    ports:\n      - "\${OBS_PORT:-${c.port}}:8080"`
-    : `    expose:\n      - "8080"`;
+  // ── obs ───────────────────────────────────────────────────────
+  const obsPortBlock = hasProxy
+    ? `    expose:\n      - "8080"`
+    : `    ports:\n      - "\${OBS_PORT:-${c.port}}:8080"`;
 
-  const obsInfluxEnv = hasInflux ? `
-      OBS_HISTORY__BACKEND: influxdb` : '';
+  const obsInfluxEnv = hasInflux
+    ? `\n      OBS_HISTORY__BACKEND: influxdb`
+    : '';
 
-  const obs = `  obs:
+  const obs = `  # ── openbridge server ─────────────────────────────────────────────────────
+  obs:
     image: ghcr.io/abeggled/openbridgeserver:latest
-    # build: .
     restart: unless-stopped
-    pid: "service:mosquitto"
+    container_name: obs_obs
+    pid: "service:obs_mqtt"
     depends_on:
-      mosquitto:
+      obs_mqtt:
         condition: service_healthy
-    environment:
-      OBS_JWT_SECRET: \${OBS_JWT_SECRET}
-      OBS_MQTT_USERNAME: \${OBS_MQTT_USERNAME}
-      OBS_MQTT_PASSWORD: \${OBS_MQTT_PASSWORD}
-      OBS_SERVER__LOG_LEVEL: \${OBS_LOG_LEVEL:-INFO}
-      TZ: ${c.tz}${obsInfluxEnv}
     volumes:
       - obs_data:/data
       - mosquitto_passwd:/mosquitto/passwd
-${obsPortMapping}
-    healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:8080/api/v1/system/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - obs_net`;
+${obsPortBlock}
+    environment:
+      OBS_MQTT__HOST: obs_mqtt
+      OBS_MQTT__PORT: "1883"
+      OBS_MQTT__USERNAME: \${OBS_MQTT_USERNAME:-obs}
+      OBS_MQTT__PASSWORD: \${OBS_MQTT_PASSWORD:-changeme}
 
-  // ── influxdb ──
+      OBS_MOSQUITTO__PASSWD_FILE: /mosquitto/passwd/passwd
+      OBS_MOSQUITTO__SERVICE_USERNAME: \${OBS_MQTT_USERNAME:-obs}
+      OBS_MOSQUITTO__SERVICE_PASSWORD: \${OBS_MQTT_PASSWORD:-changeme}
+      OBS_MOSQUITTO__RELOAD_PID: "1"
+
+      OBS_SECURITY__JWT_SECRET: \${OBS_JWT_SECRET:-changeme}
+      OBS_SERVER__LOG_LEVEL: \${OBS_LOG_LEVEL:-INFO}
+      TZ: ${c.tz}${obsInfluxEnv}
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8080/api/v1/system/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s${svcNet}`;
+
+  // ── influxdb ──────────────────────────────────────────────────
   let influxdb = '';
   if (c.influx === 'influx1') {
     influxdb = `
+
+  # ── InfluxDB 1.x ─────────────────────────────────────────────────────────
   influxdb:
     image: influxdb:1.11-alpine
     restart: unless-stopped
@@ -291,11 +349,11 @@ ${obsPortMapping}
     volumes:
       - influxdb_data:/var/lib/influxdb
     expose:
-      - "8086"
-    networks:
-      - obs_net`;
+      - "8086"${svcNet}`;
   } else if (c.influx === 'influx2') {
     influxdb = `
+
+  # ── InfluxDB 2.x ─────────────────────────────────────────────────────────
   influxdb:
     image: influxdb:2.7-alpine
     restart: unless-stopped
@@ -309,11 +367,11 @@ ${obsPortMapping}
     volumes:
       - influxdb_data:/var/lib/influxdb2
     expose:
-      - "8086"
-    networks:
-      - obs_net`;
+      - "8086"${svcNet}`;
   } else if (c.influx === 'influx3') {
     influxdb = `
+
+  # ── InfluxDB 3 Core ───────────────────────────────────────────────────────
   influxdb:
     image: influxdb:3-core
     restart: unless-stopped
@@ -321,22 +379,22 @@ ${obsPortMapping}
     volumes:
       - influxdb_data:/var/lib/influxdb3
     expose:
-      - "8086"
-    networks:
-      - obs_net`;
+      - "8086"${svcNet}`;
   }
 
-  // ── grafana ──
+  // ── grafana ───────────────────────────────────────────────────
   let grafana = '';
   if (hasGrafana) {
     const grafanaImage = c.grafana === 'grafana_ent'
       ? 'grafana/grafana-enterprise:latest'
       : 'grafana/grafana:latest';
-    const grafanaDeps = hasInflux
-      ? `    depends_on:\n      - influxdb\n`
-      : '';
-    const grafanaPort = hasProxy ? `    expose:\n      - "3000"` : `    ports:\n      - "\${GRAFANA_PORT:-3000}:3000"`;
+    const grafanaDeps = hasInflux ? `    depends_on:\n      - influxdb\n` : '';
+    const grafanaPort = hasProxy
+      ? `    expose:\n      - "3000"`
+      : `    ports:\n      - "\${GRAFANA_PORT:-3000}:3000"`;
     grafana = `
+
+  # ── Grafana ───────────────────────────────────────────────────────────────
   grafana:
     image: ${grafanaImage}
     restart: unless-stopped
@@ -347,15 +405,15 @@ ${grafanaDeps}    environment:
       TZ: ${c.tz}
     volumes:
       - grafana_data:/var/lib/grafana
-${grafanaPort}
-    networks:
-      - obs_net`;
+${grafanaPort}${svcNet}`;
   }
 
-  // ── reverse proxy ──
+  // ── reverse proxy ─────────────────────────────────────────────
   let proxyService = '';
   if (c.proxy === 'proxy_caddy') {
     proxyService = `
+
+  # ── Caddy (auto-HTTPS) ────────────────────────────────────────────────────
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
@@ -374,6 +432,8 @@ ${grafanaPort}
       - obs_net`;
   } else if (c.proxy === 'proxy_nginx') {
     proxyService = `
+
+  # ── Nginx ─────────────────────────────────────────────────────────────────
   nginx:
     image: nginx:alpine
     restart: unless-stopped
@@ -390,6 +450,8 @@ ${grafanaPort}
       - obs_net`;
   } else if (c.proxy === 'proxy_npm') {
     proxyService = `
+
+  # ── Nginx Proxy Manager ───────────────────────────────────────────────────
   npm:
     image: jc21/nginx-proxy-manager:latest
     restart: unless-stopped
@@ -404,7 +466,7 @@ ${grafanaPort}
       - obs_net`;
   }
 
-  // ── volumes ──
+  // ── volumes ───────────────────────────────────────────────────
   const vols = [
     'obs_data: {}',
     'mosquitto_passwd: {}',
@@ -413,10 +475,15 @@ ${grafanaPort}
   ];
   if (hasInflux)  vols.push('influxdb_data: {}');
   if (hasGrafana) vols.push('grafana_data: {}');
-  if (c.proxy === 'proxy_caddy')  { vols.push('caddy_data: {}', 'caddy_config: {}'); }
-  if (c.proxy === 'proxy_npm')    { vols.push('npm_data: {}', 'npm_letsencrypt: {}'); }
+  if (c.proxy === 'proxy_caddy') { vols.push('caddy_data: {}', 'caddy_config: {}'); }
+  if (c.proxy === 'proxy_npm')   { vols.push('npm_data: {}', 'npm_letsencrypt: {}'); }
 
   const volsBlock = vols.map(v => `  ${v}`).join('\n');
+
+  // ── networks (only needed with reverse proxy) ─────────────────
+  const networksBlock = hasProxy
+    ? `\nnetworks:\n  obs_net:\n    driver: bridge\n`
+    : '';
 
   return `# Generated by openbridge server Compose Generator
 # https://open-bridge.io
@@ -424,6 +491,8 @@ ${grafanaPort}
 # Grafana:  ${c.grafana === 'grafana_none' ? 'none' : c.grafana}
 # Proxy:    ${c.proxy === 'proxy_none' ? 'none' : c.proxy}
 # Domain:   ${c.domain}
+
+${configsBlock}
 
 services:
 
@@ -433,11 +502,7 @@ ${obs}${influxdb}${grafana}${proxyService}
 
 volumes:
 ${volsBlock}
-
-networks:
-  obs_net:
-    driver: bridge
-`;
+${networksBlock}`;
 }
 
 // ── generate .env.example ─────────────────────────────────────
@@ -446,14 +511,14 @@ function genEnv(c: GenConfig): string {
   const hasGrafana = c.grafana !== 'grafana_none';
   const hasProxy   = c.proxy   !== 'proxy_none';
 
-  let out = `# openbridge server environment
-# Copy to .env and fill in your values
+  let out = `# openbridge server — environment variables
+# Copy to .env and fill in your values before starting the stack
 
-# ── openbridge server ──────────────────────────────────────────
-# Required: change to a random 32+ character string
+# ── Required ───────────────────────────────────────────────────
+# Random string, min 32 characters
 OBS_JWT_SECRET=change-this-to-a-random-secret-min-32-chars
 
-# MQTT service account (used internally)
+# MQTT service account (shared between OBS and Mosquitto)
 OBS_MQTT_USERNAME=obs
 OBS_MQTT_PASSWORD=change-this-mqtt-service-password
 
