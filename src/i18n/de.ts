@@ -14,6 +14,7 @@ export const de: Translations = {
     features: 'Features',
     install: 'Installation',
     generator: 'Compose Generator',
+    docs: 'Docs',
     github: 'GitHub',
     lang_switch: 'EN',
     lang_switch_label: 'Auf Englisch wechseln',

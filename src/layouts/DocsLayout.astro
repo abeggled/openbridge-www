@@ -1,0 +1,235 @@
+---
+import { getCollection } from 'astro:content';
+import type { Translations } from '../i18n/en';
+import type { Lang } from '../i18n/index';
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  t: Translations;
+  lang: Lang;
+  title: string;
+  description?: string;
+  headings: MarkdownHeading[];
+  currentSlug: string;
+}
+
+const { t, lang, title, description, headings, currentSlug } = Astro.props;
+
+const allDocs = await getCollection('docs', ({ id }) => id.startsWith(`${lang}/`));
+const sortedDocs = allDocs.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+const altLang = lang === 'en' ? 'de' : 'en';
+const altPath = Astro.url.pathname.replace(`/${lang}/`, `/${altLang}/`);
+const base = `/${lang}`;
+
+const pageTitle = `${title} — openbridge server docs`;
+const pageDesc = description ?? t.meta.description;
+---
+
+<!doctype html>
+<html lang={lang} class="dark scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={pageDesc} />
+    <title>{pageTitle}</title>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" hreflang={lang}    href={Astro.url.pathname} />
+    <link rel="alternate" hreflang={altLang} href={altPath} />
+    <link rel="alternate" hreflang="x-default" href="/en/docs/" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-[#0a0f0d] text-[#f0eeea] font-sans antialiased">
+
+    {/* Top bar */}
+    <header class="fixed top-0 left-0 right-0 z-50 border-b border-bridge-950/80 bg-[#0a0f0d]/90 backdrop-blur-md">
+      <div class="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-3 sm:px-6">
+
+        <div class="flex items-center gap-6">
+          <a href={`${base}/`} class="flex items-center gap-3 group" aria-label="openbridge server home">
+            <img src="/logo/obs_icon_dark.svg" alt="" width="32" height="32" class="rounded-md transition-transform group-hover:scale-105" />
+            <span class="font-mono text-sm font-medium text-[#f0eeea] hidden sm:block">
+              open<span class="text-bridge-300">bridge</span>
+            </span>
+          </a>
+          <span class="hidden sm:block text-[#444] text-sm">/</span>
+          <span class="hidden sm:block text-sm text-[#888780]">docs</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a
+            href={altPath}
+            class="rounded-md border border-bridge-900 px-2.5 py-1 font-mono text-xs text-[#888780] hover:border-bridge-700 hover:text-bridge-300 transition-colors"
+          >
+            {t.nav.lang_switch}
+          </a>
+          <a
+            href="https://github.com/abeggled/openbridgeserver"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-1.5 rounded-md bg-bridge-900/60 px-3 py-1.5 text-xs font-medium text-bridge-200 hover:bg-bridge-900 transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex min-h-screen pt-[53px]">
+
+      {/* Sidebar */}
+      <aside class="hidden lg:flex flex-col w-64 shrink-0 border-r border-bridge-950/60 px-4 py-8 sticky top-[53px] h-[calc(100vh-53px)] overflow-y-auto">
+        <nav aria-label="Documentation navigation">
+          <p class="mb-3 px-2 font-mono text-[10px] uppercase tracking-widest text-[#444]">docs</p>
+          <ul class="space-y-0.5">
+            {sortedDocs.map(doc => {
+              const slug = doc.id.replace(`${lang}/`, '').replace(/\.mdx?$/, '');
+              const href = `/${lang}/docs/${slug}`;
+              const isActive = slug === currentSlug;
+              return (
+                <li>
+                  <a
+                    href={href}
+                    class:list={[
+                      'block rounded-md px-3 py-2 text-sm transition-colors',
+                      isActive
+                        ? 'bg-bridge-900/40 text-bridge-300 font-medium'
+                        : 'text-[#888780] hover:text-[#f0eeea] hover:bg-bridge-950/60'
+                    ]}
+                  >
+                    {doc.data.title}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </aside>
+
+      {/* Main content */}
+      <div class="flex-1 min-w-0">
+        <div class="mx-auto max-w-3xl px-6 py-12 lg:px-12">
+
+          {/* Mobile sidebar toggle */}
+          <details class="lg:hidden mb-8 rounded-lg border border-bridge-950 bg-[#0d1510]">
+            <summary class="cursor-pointer px-4 py-3 text-sm text-[#888780] hover:text-bridge-300 transition-colors select-none">
+              Navigation
+            </summary>
+            <nav class="border-t border-bridge-950 px-4 py-3">
+              <ul class="space-y-1">
+                {sortedDocs.map(doc => {
+                  const slug = doc.id.replace(`${lang}/`, '').replace(/\.mdx?$/, '');
+                  const href = `/${lang}/docs/${slug}`;
+                  const isActive = slug === currentSlug;
+                  return (
+                    <li>
+                      <a
+                        href={href}
+                        class:list={[
+                          'block rounded px-2 py-1.5 text-sm transition-colors',
+                          isActive ? 'text-bridge-300 font-medium' : 'text-[#888780] hover:text-[#f0eeea]'
+                        ]}
+                      >
+                        {doc.data.title}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </details>
+
+          {/* Table of contents (inline, for h2s) */}
+          {headings.filter(h => h.depth === 2).length > 0 && (
+            <nav class="mb-10 rounded-lg border border-bridge-950 bg-[#0d1510] px-5 py-4 text-sm">
+              <p class="mb-2 font-mono text-[10px] uppercase tracking-widest text-[#444]">Inhalt</p>
+              <ul class="space-y-1.5">
+                {headings.filter(h => h.depth <= 3).map(h => (
+                  <li style={h.depth === 3 ? 'padding-left:1rem' : ''}>
+                    <a href={`#${h.slug}`} class="text-[#888780] hover:text-bridge-300 transition-colors">
+                      {h.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
+          {/* Article */}
+          <article class="prose prose-invert prose-bridge max-w-none">
+            <slot />
+          </article>
+
+          {/* Back link */}
+          <div class="mt-16 border-t border-bridge-950/60 pt-6">
+            <a href={`${base}/`} class="text-sm text-[#888780] hover:text-bridge-300 transition-colors">
+              ← {lang === 'de' ? 'Zurück zur Startseite' : 'Back to home'}
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
+
+<style is:global>
+  /* Prose colour overrides to match site palette */
+  .prose-bridge {
+    --tw-prose-body: #c8c5bf;
+    --tw-prose-headings: #f0eeea;
+    --tw-prose-lead: #888780;
+    --tw-prose-links: #5dcaa5;
+    --tw-prose-bold: #f0eeea;
+    --tw-prose-counters: #888780;
+    --tw-prose-bullets: #444;
+    --tw-prose-hr: #1a2820;
+    --tw-prose-quotes: #c8c5bf;
+    --tw-prose-quote-borders: #085041;
+    --tw-prose-captions: #888780;
+    --tw-prose-code: #5dcaa5;
+    --tw-prose-pre-code: #c8c5bf;
+    --tw-prose-pre-bg: #0d1510;
+    --tw-prose-th-borders: #1a2820;
+    --tw-prose-td-borders: #1a2820;
+  }
+
+  .prose-bridge pre {
+    border: 1px solid #1a2820;
+  }
+
+  .prose-bridge code:not(pre code) {
+    background: #0d1510;
+    border: 1px solid #1a2820;
+    border-radius: 4px;
+    padding: 0.1em 0.4em;
+    font-size: 0.85em;
+  }
+
+  .prose-bridge a {
+    text-decoration: underline;
+    text-decoration-color: #085041;
+    text-underline-offset: 3px;
+  }
+
+  .prose-bridge a:hover {
+    text-decoration-color: #5dcaa5;
+  }
+
+  .prose-bridge img {
+    border-radius: 8px;
+    border: 1px solid #1a2820;
+  }
+</style>

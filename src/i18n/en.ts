@@ -12,6 +12,7 @@ export const en = {
     features: 'Features',
     install: 'Installation',
     generator: 'Compose Generator',
+    docs: 'Docs',
     github: 'GitHub',
     lang_switch: 'DE',
     lang_switch_label: 'Switch to German',
