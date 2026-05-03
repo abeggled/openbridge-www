@@ -8,51 +8,55 @@
 set -euo pipefail
 
 TARGET="${1:-production}"
+STEP="${2:-pull}"   # internal: pull → exec fresh copy → build
 
 PROD_DIR="/var/www/openbridge-www"
 BETA_DIR="/var/www/openbridge-www-beta"
 
-echo "▶ openbridge-www deploy — target: ${TARGET}"
-echo ""
+# ── Step 1: Pull, then re-exec the freshly pulled script ────────
+if [ "$STEP" = "pull" ]; then
+    echo "▶ openbridge-www deploy — target: ${TARGET}"
+    echo ""
+    echo "→ Pulling latest code..."
 
-# ── 1. Pull latest code ──────────────────────────────────────────
-echo "→ Pulling latest code..."
-git fetch origin
+    git fetch origin
 
-if [ "$TARGET" = "beta" ]; then
-    if git show-ref --quiet refs/heads/beta; then
-        git checkout beta
+    if [ "$TARGET" = "beta" ]; then
+        if git show-ref --quiet refs/heads/beta; then
+            git checkout beta
+        else
+            git checkout -b beta origin/beta
+        fi
+        git pull origin beta
     else
-        git checkout -b beta origin/beta
+        if git show-ref --quiet refs/heads/main; then
+            git checkout main
+        else
+            git checkout -b main origin/main
+        fi
+        git pull origin main
     fi
-    git pull origin beta
-else
-    if git show-ref --quiet refs/heads/main; then
-        git checkout main
-    else
-        git checkout -b main origin/main
-    fi
-    git pull origin main
+
+    # Re-exec using the freshly pulled version of this script
+    exec bash "$0" "$TARGET" "build"
 fi
 
-# ── 2. Install dependencies ──────────────────────────────────────
+# ── Step 2: Build & deploy (running fresh copy after pull) ──────
 echo "→ Installing dependencies..."
 npm ci --silent
 
-# ── 3. Build ────────────────────────────────────────────────────
 echo "→ Building..."
 npm run build
 
-# ── 4. Deploy ───────────────────────────────────────────────────
 if [ "$TARGET" = "beta" ]; then
-    DEST="${BETA_DIR}"
+    DEST="$BETA_DIR"
     echo "→ Deploying to beta: ${DEST}/dist"
 else
-    DEST="${PROD_DIR}"
+    DEST="$PROD_DIR"
     echo "→ Deploying to production: ${DEST}/dist"
 fi
 
-mkdir -p "${DEST}"
+mkdir -p "$DEST"
 rm -rf "${DEST}/dist"
 cp -r dist "${DEST}/dist"
 
