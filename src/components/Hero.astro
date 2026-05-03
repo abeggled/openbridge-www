@@ -26,7 +26,7 @@ if (import.meta.env.PROD) {
   } catch { /* fallback to static version */ }
 }
 
-const badge = `Open Source · MIT · ${version}`;
+const badge = `${t.hero.badge_prefix} ${version}`;
 ---
 
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -66,7 +66,7 @@ const badge = `Open Source · MIT · ${version}`;
     <h1 class="font-mono text-5xl font-medium leading-tight tracking-tight sm:text-6xl lg:text-7xl">
       <span class="text-[var(--c-text-1)]">{t.hero.title_line1}</span>
       <br />
-      <span class="text-bridge-300">{t.hero.title_line2}</span>
+      <span class="text-[var(--c-accent)]">{t.hero.title_line2}</span>
       <br />
       <span class="text-[var(--c-text-1)]">{t.hero.title_line3}</span>
     </h1>
@@ -101,7 +101,7 @@ const badge = `Open Source · MIT · ${version}`;
     <div class="mx-auto mt-16 grid max-w-2xl grid-cols-2 gap-px sm:grid-cols-4 overflow-hidden rounded-xl border border-bridge-950/80">
       {t.hero.stats.map((s) => (
         <div class="bg-[var(--c-bg-card60)] px-6 py-5 text-center">
-          <div class="font-mono text-2xl font-medium text-bridge-300">{s.value}</div>
+          <div class="font-mono text-2xl font-medium text-[var(--c-accent)]">{s.value}</div>
           <div class="mt-0.5 text-xs text-[var(--c-text-4)]">{s.label}</div>
         </div>
       ))}

@@ -53,7 +53,7 @@ const lxc = t.install.lxc;
                     copy
                   </button>
                 </div>
-                <pre class="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-bridge-200"><code>{step.code}</code></pre>
+                <pre class="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed text-[var(--c-code-text)]"><code>{step.code}</code></pre>
               </div>
             )}
 
@@ -70,8 +70,8 @@ const lxc = t.install.lxc;
     </div>
 
     <div class="mt-10 rounded-lg border-l-2 border-bridge-700 bg-bridge-950/20 px-4 py-3">
-      <p class="text-xs text-bridge-400 leading-relaxed">
-        <span class="font-mono font-medium text-bridge-300">Tip: </span>
+      <p class="text-xs text-[var(--c-text-3)] leading-relaxed">
+        <span class="font-mono font-medium text-[var(--c-accent)]">Tip: </span>
         {lxc.tip}
       </p>
     </div>
@@ -85,8 +85,8 @@ const lxc = t.install.lxc;
       await navigator.clipboard.writeText(btn.dataset.code ?? '');
       const orig = btn.textContent;
       btn.textContent = 'copied!';
-      btn.classList.add('text-bridge-300');
-      setTimeout(() => { btn.textContent = orig; btn.classList.remove('text-bridge-300'); }, 1800);
+      btn.classList.add('text-[var(--c-accent)]');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('text-[var(--c-accent)]'); }, 1800);
     });
   });
 </script>

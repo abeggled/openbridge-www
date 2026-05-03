@@ -21,6 +21,7 @@ export const de: Translations = {
 
   hero: {
     badge: 'Open Source · MIT · Pre-release v0.1',
+    badge_prefix: 'Aktuelle Version:',
     title_line1: 'Der offene',
     title_line2: 'Multiprotokoll-Server',
     title_line3: 'für Gebäudeautomation.',

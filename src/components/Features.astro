@@ -27,7 +27,7 @@ const icons: Record<string, string> = {
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {t.features.items.map((item) => (
         <div class="group rounded-xl border border-bridge-950/60 bg-[var(--c-bg-card40)] p-6 transition hover:border-bridge-800/50 hover:bg-[var(--c-bg-hover60)]">
-          <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-bridge-900/40 bg-bridge-950/60 text-bridge-400 transition group-hover:border-bridge-800/60 group-hover:text-bridge-300">
+          <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-bridge-900/40 bg-bridge-950/60 text-bridge-400 transition group-hover:border-bridge-800/60 group-hover:text-[var(--c-accent)]">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={icons[item.icon]} />
           </div>
           <h3 class="font-mono text-sm font-medium text-[var(--c-text-1)] mb-2">{item.title}</h3>
@@ -42,7 +42,7 @@ const icons: Record<string, string> = {
         <thead>
           <tr class="border-b border-bridge-950/60 bg-[var(--c-bg-alt)]">
             <th class="px-4 py-3 text-left font-mono font-medium text-bridge-700 uppercase tracking-wider">Aspect</th>
-            <th class="px-4 py-3 text-left font-mono font-medium text-bridge-400 uppercase tracking-wider">openbridge server</th>
+            <th class="px-4 py-3 text-left font-mono font-medium text-[var(--c-accent)] uppercase tracking-wider">openbridge server</th>
             <th class="px-4 py-3 text-left font-mono font-medium text-[var(--c-text-5)] uppercase tracking-wider">Timberwolf Server</th>
           </tr>
         </thead>
@@ -58,7 +58,7 @@ const icons: Record<string, string> = {
           ].map(([aspect, obs, tws]) => (
             <tr class="bg-[var(--c-bg)] hover:bg-[var(--c-bg-card)] transition">
               <td class="px-4 py-3 text-[var(--c-text-2)]">{aspect}</td>
-              <td class="px-4 py-3 text-bridge-300 font-medium">{obs}</td>
+              <td class="px-4 py-3 text-[var(--c-accent)] font-medium">{obs}</td>
               <td class="px-4 py-3 text-[var(--c-text-5)]">{tws}</td>
             </tr>
           ))}

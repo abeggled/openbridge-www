@@ -29,17 +29,17 @@ const base     = `/${lang}`;
         class="rounded-lg transition-transform group-hover:scale-105"
       />
       <span class="font-mono text-sm font-medium text-[var(--c-text-1)] hidden sm:block">
-        open<span class="text-bridge-300">bridge</span>
+        open<span class="text-[var(--c-accent)]">bridge</span>
       </span>
     </a>
 
     {/* Desktop nav */}
     <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--c-text-2)]">
-      <a href={`${base}/#about`}     class="hover:text-bridge-300 transition-colors">{t.nav.what}</a>
-      <a href={`${base}/#protocols`} class="hover:text-bridge-300 transition-colors">{t.nav.protocols}</a>
-      <a href={`${base}/#features`}  class="hover:text-bridge-300 transition-colors">{t.nav.features}</a>
-      <a href={`${base}/#install`}   class="hover:text-bridge-300 transition-colors">{t.nav.install}</a>
-      <a href={`${base}/#generator`} class="hover:text-bridge-300 transition-colors">{t.nav.generator}</a>
+      <a href={`${base}/#about`}     class="hover:text-[var(--c-accent)] transition-colors">{t.nav.what}</a>
+      <a href={`${base}/#protocols`} class="hover:text-[var(--c-accent)] transition-colors">{t.nav.protocols}</a>
+      <a href={`${base}/#features`}  class="hover:text-[var(--c-accent)] transition-colors">{t.nav.features}</a>
+      <a href={`${base}/#install`}   class="hover:text-[var(--c-accent)] transition-colors">{t.nav.install}</a>
+      <a href={`${base}/#generator`} class="hover:text-[var(--c-accent)] transition-colors">{t.nav.generator}</a>
     </nav>
 
     {/* Right actions */}
@@ -47,7 +47,7 @@ const base     = `/${lang}`;
       {/* Theme toggle */}
       <button
         id="theme-toggle"
-        class="rounded-md p-1.5 text-[var(--c-text-2)] hover:text-bridge-300 transition-colors"
+        class="rounded-md p-1.5 text-[var(--c-text-2)] hover:text-[var(--c-accent)] transition-colors"
         aria-label="Toggle light/dark theme"
       >
         {/* Sun icon — shown in dark mode */}
@@ -72,7 +72,7 @@ const base     = `/${lang}`;
       <a
         href={altPath}
         aria-label={t.nav.lang_switch_label}
-        class="rounded-md border border-bridge-900 px-2.5 py-1 font-mono text-xs text-[var(--c-text-2)] hover:border-bridge-700 hover:text-bridge-300 transition-colors"
+        class="rounded-md border border-bridge-900 px-2.5 py-1 font-mono text-xs text-[var(--c-text-2)] hover:border-bridge-700 hover:text-[var(--c-accent)] transition-colors"
       >
         {t.nav.lang_switch}
       </a>
@@ -82,7 +82,7 @@ const base     = `/${lang}`;
         href="https://github.com/abeggled/openbridgeserver"
         target="_blank"
         rel="noopener noreferrer"
-        class="flex items-center gap-1.5 rounded-md bg-bridge-900/60 px-3 py-1.5 text-xs font-medium text-bridge-200 hover:bg-bridge-900 transition-colors"
+        class="flex items-center gap-1.5 rounded-md bg-bridge-900/60 px-3 py-1.5 text-xs font-medium text-white hover:bg-bridge-900 transition-colors"
         aria-label={t.nav.github}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -94,7 +94,7 @@ const base     = `/${lang}`;
       {/* Mobile menu toggle */}
       <button
         id="menu-toggle"
-        class="md:hidden rounded-md p-1.5 text-[var(--c-text-2)] hover:text-bridge-300 transition-colors"
+        class="md:hidden rounded-md p-1.5 text-[var(--c-text-2)] hover:text-[var(--c-accent)] transition-colors"
         aria-label="Toggle menu"
         aria-expanded="false"
       >
@@ -117,11 +117,11 @@ const base     = `/${lang}`;
     class="hidden md:hidden border-t border-bridge-950 bg-[var(--c-bg)] px-4 py-4"
   >
     <ul class="flex flex-col gap-3 text-sm text-[var(--c-text-2)]">
-      <li><a href={`${base}/#about`}     class="block hover:text-bridge-300 transition-colors">{t.nav.what}</a></li>
-      <li><a href={`${base}/#protocols`} class="block hover:text-bridge-300 transition-colors">{t.nav.protocols}</a></li>
-      <li><a href={`${base}/#features`}  class="block hover:text-bridge-300 transition-colors">{t.nav.features}</a></li>
-      <li><a href={`${base}/#install`}   class="block hover:text-bridge-300 transition-colors">{t.nav.install}</a></li>
-      <li><a href={`${base}/#generator`} class="block hover:text-bridge-300 transition-colors">{t.nav.generator}</a></li>
+      <li><a href={`${base}/#about`}     class="block hover:text-[var(--c-accent)] transition-colors">{t.nav.what}</a></li>
+      <li><a href={`${base}/#protocols`} class="block hover:text-[var(--c-accent)] transition-colors">{t.nav.protocols}</a></li>
+      <li><a href={`${base}/#features`}  class="block hover:text-[var(--c-accent)] transition-colors">{t.nav.features}</a></li>
+      <li><a href={`${base}/#install`}   class="block hover:text-[var(--c-accent)] transition-colors">{t.nav.install}</a></li>
+      <li><a href={`${base}/#generator`} class="block hover:text-[var(--c-accent)] transition-colors">{t.nav.generator}</a></li>
     </ul>
   </nav>
 </header>

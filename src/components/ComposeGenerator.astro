@@ -27,12 +27,12 @@ const g = t.generator;
         <div>
           <p class="font-mono text-xs text-bridge-600 uppercase tracking-widest mb-3">{g.section_base}</p>
           <div class="flex items-center gap-3 rounded-lg border border-bridge-900/40 bg-bridge-950/30 px-4 py-3">
-            <span class="text-bridge-300">
+            <span class="text-[var(--c-accent)]">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
-            <span class="font-mono text-sm text-bridge-200">openbridge server</span>
+            <span class="font-mono text-sm text-[var(--c-accent)]">openbridge server</span>
             <span class="text-[var(--c-text-5)] mx-1">+</span>
-            <span class="font-mono text-sm text-bridge-200">Mosquitto</span>
+            <span class="font-mono text-sm text-[var(--c-accent)]">Mosquitto</span>
             <span class="ml-auto font-mono text-xs text-bridge-800">{g.base_desc}</span>
           </div>
         </div>
@@ -183,7 +183,7 @@ const g = t.generator;
                 </button>
               </div>
             </div>
-            <pre id="output-code" class="overflow-x-auto px-4 py-4 font-mono text-xs leading-relaxed text-bridge-200 max-h-[500px] overflow-y-auto"></pre>
+            <pre id="output-code" class="overflow-x-auto px-4 py-4 font-mono text-xs leading-relaxed text-[var(--c-code-text)] max-h-[500px] overflow-y-auto"></pre>
           </div>
         </div>
 
@@ -718,7 +718,7 @@ function switchTab(tab: TabKey) {
   document.querySelectorAll<HTMLElement>('.gen-tab').forEach(b => {
     const on = b.dataset.tab === tab;
     b.className = on
-      ? 'gen-tab flex-shrink-0 rounded-md px-3 py-1.5 font-mono text-xs transition bg-bridge-900/60 text-bridge-200'
+      ? 'gen-tab flex-shrink-0 rounded-md px-3 py-1.5 font-mono text-xs transition bg-bridge-900/60 text-[var(--c-code-text)]'
       : 'gen-tab flex-shrink-0 rounded-md px-3 py-1.5 font-mono text-xs transition text-[var(--c-text-4)] hover:text-bridge-400';
   });
 }
@@ -761,8 +761,8 @@ copyBtn?.addEventListener('click', async () => {
   await navigator.clipboard.writeText(state.files[state.activeTab] ?? '');
   const orig = copyBtn.textContent;
   copyBtn.textContent = 'Copied!';
-  copyBtn.classList.add('text-bridge-300');
-  setTimeout(() => { copyBtn.textContent = orig; copyBtn.classList.remove('text-bridge-300'); }, 2000);
+  copyBtn.classList.add('text-[var(--c-accent)]');
+  setTimeout(() => { copyBtn.textContent = orig; copyBtn.classList.remove('text-[var(--c-accent)]'); }, 2000);
 });
 
 // Download

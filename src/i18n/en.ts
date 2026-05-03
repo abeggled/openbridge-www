@@ -19,6 +19,7 @@ export const en = {
 
   hero: {
     badge: 'Open Source · MIT · Pre-release v0.1',
+    badge_prefix: 'Current version:',
     title_line1: 'The open',
     title_line2: 'multiprotocol server',
     title_line3: 'for building automation.',
