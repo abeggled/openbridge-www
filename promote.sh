@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # promote.sh — Promote beta to production
 #
 # Copies the current beta build directly to production
@@ -6,7 +6,7 @@
 #
 # Usage:  ./promote.sh
 
-set -euo pipefail
+set -eu
 
 PROD_DIR="/var/www/openbridge-www"
 BETA_DIR="/var/www/openbridge-www-beta"
@@ -19,8 +19,8 @@ fi
 
 echo "▶ Promoting beta → production"
 echo ""
-
-read -rp "  Are you sure? This will replace production. [y/N] " confirm
+printf "  Are you sure? This will replace production. [y/N] "
+read -r confirm
 case "$confirm" in
     [Yy]*) ;;
     *) echo "Aborted."; exit 0 ;;

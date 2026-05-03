@@ -1,14 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 # deploy.sh — Build and deploy openbridge-www
 #
 # Usage:
 #   ./deploy.sh            → deploy to production  (www.open-bridge.io)
 #   ./deploy.sh beta       → deploy to beta         (beta.www.open-bridge.io)
 
-set -euo pipefail
+set -eu
 
 TARGET="${1:-production}"
-STEP="${2:-pull}"   # internal: pull → exec fresh copy → build
+STEP="${2:-pull}"
 
 PROD_DIR="/var/www/openbridge-www"
 BETA_DIR="/var/www/openbridge-www-beta"
@@ -38,7 +38,7 @@ if [ "$STEP" = "pull" ]; then
     fi
 
     # Re-exec using the freshly pulled version of this script
-    exec bash "$0" "$TARGET" "build"
+    exec sh "$0" "$TARGET" "build"
 fi
 
 # ── Step 2: Build & deploy (running fresh copy after pull) ──────
