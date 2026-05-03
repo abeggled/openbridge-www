@@ -19,54 +19,61 @@ echo ""
 case "$STEP" in
 
   bootstrap)
-    # Always fetch and update main first — deploy scripts live on main
-    echo "→ Updating deploy scripts from main..."
+    echo "→ Cleaning working tree..."
+    git checkout -- .
+    git clean -fd
+
+    echo "→ Updating from main..."
     git fetch origin
     git checkout main
     git pull origin main
+
+    echo "→ Now on: $(git log --oneline -1)"
     # Re-exec the freshly pulled script from main
     exec sh "$0" "$TARGET" "checkout"
     ;;
 
   checkout)
-    # Checkout the target branch for website content
     if [ "$TARGET" = "beta" ]; then
-        echo "→ Checking out beta branch..."
-        if git show-ref --quiet refs/heads/beta; then
-            git checkout beta
-        else
-            git checkout -b beta origin/beta
-        fi
-        git pull origin beta
+      echo "→ Checking out beta branch..."
+      if git show-ref --quiet refs/heads/beta; then
+        git checkout beta
+      else
+        git checkout -b beta origin/beta
+      fi
+      git pull origin beta
     fi
-    # Fall through to build
+
+    echo "→ Deploying commit: $(git log --oneline -1)"
+
     echo "→ Installing dependencies..."
-    npm ci --silent
+    npm ci
 
     echo "→ Building..."
     npm run build
 
     if [ "$TARGET" = "beta" ]; then
-        DEST="$BETA_DIR"
-        echo "→ Deploying to beta: ${DEST}/dist"
+      DEST="$BETA_DIR"
     else
-        DEST="$PROD_DIR"
-        echo "→ Deploying to production: ${DEST}/dist"
+      DEST="$PROD_DIR"
     fi
 
+    echo "→ Copying dist to ${DEST}/dist ..."
     mkdir -p "$DEST"
     rm -rf "${DEST}/dist"
     cp -r dist "${DEST}/dist"
 
-    # Always return to main so deploy scripts stay current
+    echo "→ Files in ${DEST}/dist:"
+    ls "${DEST}/dist"
+
     git checkout main
 
     echo ""
     echo "✓ Done! Deployed to ${TARGET}."
     if [ "$TARGET" = "beta" ]; then
-        echo "  → https://beta.www.open-bridge.io"
+      echo "  → https://beta.www.open-bridge.io"
     else
-        echo "  → https://www.open-bridge.io"
+      echo "  → https://www.open-bridge.io"
     fi
     ;;
 
