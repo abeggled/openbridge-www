@@ -23,13 +23,21 @@ echo ""
 
 # ── 1. Pull latest code ──────────────────────────────────────────
 echo "→ Pulling latest code..."
+git fetch origin
+
 if [[ "$TARGET" == "beta" ]]; then
-    git fetch origin
-    git checkout beta
+    if git show-ref --quiet refs/heads/beta; then
+        git checkout beta
+    else
+        git checkout -b beta origin/beta
+    fi
     git pull origin beta
 else
-    git fetch origin
-    git checkout main
+    if git show-ref --quiet refs/heads/main; then
+        git checkout main
+    else
+        git checkout -b main origin/main
+    fi
     git pull origin main
 fi
 
