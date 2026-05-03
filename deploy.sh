@@ -8,62 +8,66 @@
 set -eu
 
 TARGET="${1:-production}"
-STEP="${2:-pull}"
+STEP="${2:-bootstrap}"
 
 PROD_DIR="/var/www/openbridge-www"
 BETA_DIR="/var/www/openbridge-www-beta"
 
-# ── Step 1: Pull, then re-exec the freshly pulled script ────────
-if [ "$STEP" = "pull" ]; then
-    echo "▶ openbridge-www deploy — target: ${TARGET}"
-    echo ""
-    echo "→ Pulling latest code..."
+echo "▶ openbridge-www deploy — target: ${TARGET}"
+echo ""
 
+case "$STEP" in
+
+  bootstrap)
+    # Always fetch and update main first — deploy scripts live on main
+    echo "→ Updating deploy scripts from main..."
     git fetch origin
+    git checkout main
+    git pull origin main
+    # Re-exec the freshly pulled script from main
+    exec sh "$0" "$TARGET" "checkout"
+    ;;
 
+  checkout)
+    # Checkout the target branch for website content
     if [ "$TARGET" = "beta" ]; then
+        echo "→ Checking out beta branch..."
         if git show-ref --quiet refs/heads/beta; then
             git checkout beta
         else
             git checkout -b beta origin/beta
         fi
         git pull origin beta
+    fi
+    # Fall through to build
+    echo "→ Installing dependencies..."
+    npm ci --silent
+
+    echo "→ Building..."
+    npm run build
+
+    if [ "$TARGET" = "beta" ]; then
+        DEST="$BETA_DIR"
+        echo "→ Deploying to beta: ${DEST}/dist"
     else
-        if git show-ref --quiet refs/heads/main; then
-            git checkout main
-        else
-            git checkout -b main origin/main
-        fi
-        git pull origin main
+        DEST="$PROD_DIR"
+        echo "→ Deploying to production: ${DEST}/dist"
     fi
 
-    # Re-exec using the freshly pulled version of this script
-    exec sh "$0" "$TARGET" "build"
-fi
+    mkdir -p "$DEST"
+    rm -rf "${DEST}/dist"
+    cp -r dist "${DEST}/dist"
 
-# ── Step 2: Build & deploy (running fresh copy after pull) ──────
-echo "→ Installing dependencies..."
-npm ci --silent
+    # Always return to main so deploy scripts stay current
+    git checkout main
 
-echo "→ Building..."
-npm run build
+    echo ""
+    echo "✓ Done! Deployed to ${TARGET}."
+    if [ "$TARGET" = "beta" ]; then
+        echo "  → https://beta.www.open-bridge.io"
+    else
+        echo "  → https://www.open-bridge.io"
+    fi
+    ;;
 
-if [ "$TARGET" = "beta" ]; then
-    DEST="$BETA_DIR"
-    echo "→ Deploying to beta: ${DEST}/dist"
-else
-    DEST="$PROD_DIR"
-    echo "→ Deploying to production: ${DEST}/dist"
-fi
-
-mkdir -p "$DEST"
-rm -rf "${DEST}/dist"
-cp -r dist "${DEST}/dist"
-
-echo ""
-echo "✓ Done! Deployed to ${TARGET}."
-if [ "$TARGET" = "beta" ]; then
-    echo "  → https://beta.www.open-bridge.io"
-else
-    echo "  → https://www.open-bridge.io"
-fi
+esac
