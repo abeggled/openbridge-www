@@ -1,6 +1,6 @@
 # Caddyfile — openbridge server website
 # Production: www.open-bridge.io + open-bridge.io
-# Beta:       beta.open-bridge.io
+# Beta:       beta.www.open-bridge.io, beta.open-bridge.io
 # Demo:       demo.open-bridge.io
 
 # ── Redirect apex to www ────────────────────────────────────────
@@ -34,7 +34,7 @@ www.open-bridge.io {
 }
 
 # ── Beta website ────────────────────────────────────────────────
-beta.open-bridge.io {
+beta.www.open-bridge.io, beta.open-bridge.io {
     root * /var/www/openbridge-www-beta/dist
     file_server
 
