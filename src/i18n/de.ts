@@ -2,9 +2,9 @@ import type { Translations } from './en';
 
 export const de: Translations = {
   meta: {
-    title: 'openbridge server — Offener Multiprotokoll-Server für Gebäudeautomation',
+    title: 'open bridge server — Offener Multiprotokoll-Server für Gebäudeautomation',
     description:
-      'openbridge server ist ein quelloffener, MIT-lizenzierter Multiprotokoll-Server für Gebäudeautomation. Verbinde KNX, Modbus, MQTT, Home Assistant, ioBroker und mehr.',
+      'open bridge server ist ein quelloffener, MIT-lizenzierter Multiprotokoll-Server für Gebäudeautomation. Verbinde KNX, Modbus, MQTT, Home Assistant, ioBroker und mehr.',
     lang: 'de',
   },
 
@@ -26,7 +26,7 @@ export const de: Translations = {
     title_line2: 'Multiprotokoll-Server',
     title_line3: 'für Gebäudeautomation.',
     subtitle:
-      'Verbinde KNX, Modbus TCP/RTU, 1-Wire, MQTT, Home Assistant, ioBroker und mehr — über einen einzigen, API-first, quelloffenen Hub. Ohne Vendor-Lock-in. Für immer.',
+      'Verbinde KNX, Modbus TCP/RTU, 1-Wire, MQTT, Home Assistant, ioBroker und mehr — über einen einzigen, API-first, quelloffenen Hub.',
     cta_start: 'Loslegen',
     cta_github: 'Auf GitHub ansehen',
     stats: [
@@ -38,9 +38,9 @@ export const de: Translations = {
   },
 
   whatis: {
-    title: 'Was ist der openbridge server?',
+    title: 'Was ist der open bridge server?',
     text1:
-      'Der openbridge server (obs) ist ein moderner, quelloffener Ersatz für proprietäre Gebäudeautomations-Server. Er verbindet industrielle und Heimprotokolle über einen einheitlichen, erweiterbaren Kern — API-first entwickelt, sodass jede Funktion der Web-GUI auch per REST oder WebSocket verfügbar ist.',
+      'Der open bridge server (obs) ist ein moderner, quelloffener Ersatz für proprietäre Gebäudeautomations-Server. Er verbindet industrielle und Heimprotokolle über einen einheitlichen, erweiterbaren Kern — API-first entwickelt, sodass jede Funktion der Web-GUI auch per REST oder WebSocket verfügbar ist.',
     text2:
       'Ursprünglich als offene Alternative zum Timberwolf Server (TWS) entwickelt, basiert obs auf Python 3.11+, läuft auf Linux (x86_64 und ARM Cortex-A72) und ist MIT-lizenziert — ohne jede Einschränkung.',
     cards: [
@@ -126,7 +126,7 @@ export const de: Translations = {
   },
 
   features: {
-    title: 'Warum openbridge server?',
+    title: 'Warum open bridge server?',
     subtitle: 'Von Grund auf für moderne Gebäudeautomation entwickelt — offen, schnell und erweiterbar.',
     items: [
       {
@@ -167,7 +167,7 @@ export const de: Translations = {
     subtitle: 'Proxmox LXC — in wenigen Minuten einsatzbereit.',
     lxc: {
       intro:
-        'Das LXC-Template enthält ein vollständiges Ubuntu 26.04-System mit openbridge server und startet den Dienst automatisch beim Hochfahren des Containers.',
+        'Das LXC-Template enthält ein vollständiges Ubuntu 26.04-System mit open bridge server und startet den Dienst automatisch beim Hochfahren des Containers.',
       steps: [
         {
           title: 'Template herunterladen',
@@ -209,7 +209,7 @@ export const de: Translations = {
       'Erstelle eine vollständige docker-compose.yml für dein Setup — wähle die benötigten Services, fülle die Konfiguration aus und kopiere oder lade das Ergebnis herunter.',
     section_base: 'Basis (immer enthalten)',
     section_optional: 'Optionale Services',
-    base_desc: 'openbridge server + Mosquitto MQTT Broker',
+    base_desc: 'open bridge server + Mosquitto MQTT Broker',
     influx_label: 'InfluxDB',
     grafana_label: 'Grafana',
     proxy_label: 'Reverse Proxy',
@@ -254,6 +254,6 @@ export const de: Translations = {
     issues: 'Problem melden',
     links_title: 'Links',
     legal_title: 'Rechtliches',
-    copyright: '© 2026 openbridge server Mitwirkende',
+    copyright: '© 2026 open bridge server Mitwirkende',
   },
 };

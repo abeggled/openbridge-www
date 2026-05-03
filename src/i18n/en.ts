@@ -1,8 +1,8 @@
 export const en = {
   meta: {
-    title: 'openbridge server — Open Multiprotocol Server for Building Automation',
+    title: 'open bridge server — Open Multiprotocol Server for Building Automation',
     description:
-      'openbridge server is an open-source, MIT-licensed multiprotocol server for building automation. Connect KNX, Modbus, MQTT, Home Assistant, ioBroker and more.',
+      'open bridge server is an open-source, MIT-licensed multiprotocol server for building automation. Connect KNX, Modbus, MQTT, Home Assistant, ioBroker and more.',
     lang: 'en',
   },
 
@@ -24,7 +24,7 @@ export const en = {
     title_line2: 'multiprotocol server',
     title_line3: 'for building automation.',
     subtitle:
-      'Connect KNX, Modbus TCP/RTU, 1-Wire, MQTT, Home Assistant, ioBroker and more — through a single, API-first, open-source hub. No vendor lock-in. Ever.',
+      'Connect KNX, Modbus TCP/RTU, 1-Wire, MQTT, Home Assistant, ioBroker and more — through a single, API-first, open-source hub.',
     cta_start: 'Get Started',
     cta_github: 'View on GitHub',
     stats: [
@@ -36,9 +36,9 @@ export const en = {
   },
 
   whatis: {
-    title: 'What is openbridge server?',
+    title: 'What is open bridge server?',
     text1:
-      'openbridge server (obs) is a modern, open-source replacement for proprietary building automation servers. It connects diverse industrial and home protocols through a unified, extensible core — built API-first, so every feature you see in the web GUI is available via REST or WebSocket.',
+      'open bridge server (obs) is a modern, open-source replacement for proprietary building automation servers. It connects diverse industrial and home protocols through a unified, extensible core — built API-first, so every feature you see in the web GUI is available via REST or WebSocket.',
     text2:
       'Originally designed as an open alternative to the Timberwolf Server (TWS), obs is built on Python 3.11+, runs on Linux (x86_64 and ARM Cortex-A72), and is MIT-licensed with no restrictions.',
     cards: [
@@ -124,7 +124,7 @@ export const en = {
   },
 
   features: {
-    title: 'Why openbridge server?',
+    title: 'Why open bridge server?',
     subtitle: 'Built from the ground up for modern building automation — open, fast, and extensible.',
     items: [
       {
@@ -165,7 +165,7 @@ export const en = {
     subtitle: 'Proxmox LXC — up and running in minutes.',
     lxc: {
       intro:
-        'The LXC template includes a complete Ubuntu 26.04 system with openbridge server and automatically starts the service when the container boots.',
+        'The LXC template includes a complete Ubuntu 26.04 system with open bridge server and automatically starts the service when the container boots.',
       steps: [
         {
           title: 'Download template',
@@ -207,7 +207,7 @@ export const en = {
       'Generate a complete docker-compose.yml for your setup — select the services you need, fill in the config, and copy or download the result.',
     section_base: 'Base (always included)',
     section_optional: 'Optional Services',
-    base_desc: 'openbridge server + Mosquitto MQTT Broker',
+    base_desc: 'open bridge server + Mosquitto MQTT Broker',
     influx_label: 'InfluxDB',
     grafana_label: 'Grafana',
     proxy_label: 'Reverse Proxy',
@@ -252,7 +252,7 @@ export const en = {
     issues: 'Report Issue',
     links_title: 'Links',
     legal_title: 'Legal',
-    copyright: '© 2026 openbridge server contributors',
+    copyright: '© 2026 open bridge server contributors',
   },
 };
 
