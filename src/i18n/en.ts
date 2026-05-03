@@ -161,90 +161,42 @@ export const en = {
 
   install: {
     title: 'Installation',
-    subtitle: 'Choose the deployment method that fits your environment.',
-    tabs: {
-      docker: 'Docker Compose',
-      lxc: 'Proxmox LXC',
-      native: 'Native / Dev',
-    },
-    docker: {
-      intro:
-        'The recommended production setup. openbridge server and Mosquitto run as a single compose stack with health checks, named volumes, and automatic restart.',
-      steps: [
-        {
-          title: 'Clone the repository',
-          code: 'git clone https://github.com/abeggled/openbridgeserver\ncd openbridgeserver',
-        },
-        {
-          title: 'Configure environment variables',
-          code: 'cp .env.example .env\n# Edit .env — change OBS_JWT_SECRET and OBS_MQTT_PASSWORD',
-          note: 'The JWT secret must be at least 32 characters. Use a random generator.',
-        },
-        {
-          title: 'Start the stack',
-          code: 'docker compose up -d',
-        },
-        {
-          title: 'Open the web UI',
-          code: '# http://localhost:8080\n# Default credentials: admin / admin\n# Change the password immediately!',
-        },
-      ],
-      tip: 'Use the Compose Generator below to extend your stack with InfluxDB, Grafana, and a reverse proxy.',
-    },
+    subtitle: 'Proxmox LXC — up and running in minutes.',
     lxc: {
       intro:
-        'The fastest way to get started on a Proxmox server. A pre-built Ubuntu LXC template is available on GitHub Releases — just point Proxmox to the URL and create the container.',
+        'The LXC template includes a complete Ubuntu 26.04 system with openbridge server and automatically starts the service when the container boots.',
       steps: [
         {
-          title: 'Download the LXC template URL',
-          note: 'Go to the GitHub Releases page and copy the URL of the latest .tar.zst template file.',
+          title: 'Download template',
+          items: [
+            'Go to the GitHub Releases page and copy the URL of the .tar.zst file and the SHA512 hash from the LXC Template section.',
+            'In the Proxmox web UI navigate to Datacenter → Storage → local → CT Templates.',
+            'Click Download from URL.',
+            'Paste the copied URL and click Query URL.',
+            'Select SHA512 as the hash algorithm.',
+            'Paste the copied hash.',
+            'Click Download.',
+          ],
         },
         {
-          title: 'Create LXC container in Proxmox',
-          note: 'In Proxmox: Create CT → Template → Download from URL → paste the release URL.',
+          title: 'Create container',
+          items: [
+            'In the Proxmox menu select Create CT.',
+            'Choose the downloaded ubuntu-plucky-openbridgeserver_… as template.',
+            'Configure hostname, password, CPU, RAM and network as needed — recommended: at least 512 MB RAM.',
+            'Start the container.',
+          ],
         },
         {
-          title: 'Configure the container',
-          code: '# Edit /etc/obs.env inside the container\nnano /etc/obs.env',
-          note: 'Set OBS_JWT_SECRET and OBS_MQTT_PASSWORD before first start.',
+          title: 'Access',
+          note: 'Open http://<container-ip>:8080 in your browser.\nDefault credentials: admin / admin — change the password immediately after first login (Settings → Password).',
         },
         {
-          title: 'Start the service',
-          code: 'systemctl start obs\nsystemctl enable obs\n# Check status\nsystemctl status obs',
-        },
-        {
-          title: 'Access the web UI',
-          code: '# http://<container-ip>:8080\n# Default credentials: admin / admin',
+          title: 'Adjust configuration (optional)',
+          code: '# Set environment variables in /etc/obs.env, e.g.:\nOBS_MQTT__HOST=192.168.1.10\nOBS_SECURITY__JWT_SECRET=my-secret-password\n\n# Restart the service\nsystemctl restart obs',
         },
       ],
-      tip: 'The LXC container runs obs as a systemd service. Logs are available via journalctl -u obs -f.',
-    },
-    native: {
-      intro:
-        'For development or environments where containers are not available. Requires Python 3.11+ and an external Mosquitto MQTT broker.',
-      steps: [
-        {
-          title: 'Prerequisites',
-          code: '# Python 3.11+ required\npython3 --version\n\n# Install Mosquitto (Ubuntu/Debian)\napt install mosquitto mosquitto-clients',
-        },
-        {
-          title: 'Clone and create virtual environment',
-          code: 'git clone https://github.com/abeggled/openbridgeserver\ncd openbridgeserver\npython3 -m venv .venv\nsource .venv/bin/activate',
-        },
-        {
-          title: 'Install dependencies',
-          code: 'pip install -r requirements.txt',
-        },
-        {
-          title: 'Configure',
-          code: 'cp config.example.yaml config.yaml\n# Edit config.yaml: set mqtt.host, security.jwt_secret',
-        },
-        {
-          title: 'Run',
-          code: 'python -m obs\n# Access: http://localhost:8080',
-        },
-      ],
-      tip: 'In development mode set OBS_SERVER__LOG_LEVEL=DEBUG for verbose output.',
+      tip: 'Logs are available via: journalctl -u obs -f',
     },
   },
 

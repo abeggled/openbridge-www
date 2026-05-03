@@ -163,90 +163,42 @@ export const de: Translations = {
 
   install: {
     title: 'Installation',
-    subtitle: 'Wähle die Deployment-Methode, die zu deiner Umgebung passt.',
-    tabs: {
-      docker: 'Docker Compose',
-      lxc: 'Proxmox LXC',
-      native: 'Native / Dev',
-    },
-    docker: {
-      intro:
-        'Das empfohlene Produktions-Setup. openbridge server und Mosquitto laufen als ein Compose-Stack mit Health Checks, Named Volumes und automatischem Neustart.',
-      steps: [
-        {
-          title: 'Repository klonen',
-          code: 'git clone https://github.com/abeggled/openbridgeserver\ncd openbridgeserver',
-        },
-        {
-          title: 'Umgebungsvariablen konfigurieren',
-          code: 'cp .env.example .env\n# .env bearbeiten — OBS_JWT_SECRET und OBS_MQTT_PASSWORD ändern',
-          note: 'Das JWT Secret muss mindestens 32 Zeichen lang sein. Einen Zufallsgenerator verwenden.',
-        },
-        {
-          title: 'Stack starten',
-          code: 'docker compose up -d',
-        },
-        {
-          title: 'Web-UI öffnen',
-          code: '# http://localhost:8080\n# Standard-Zugangsdaten: admin / admin\n# Passwort sofort ändern!',
-        },
-      ],
-      tip: 'Nutze den Compose Generator weiter unten, um deinen Stack um InfluxDB, Grafana und einen Reverse Proxy zu erweitern.',
-    },
+    subtitle: 'Proxmox LXC — in wenigen Minuten einsatzbereit.',
     lxc: {
       intro:
-        'Der schnellste Einstieg auf einem Proxmox-Server. Ein vorgefertigtes Ubuntu LXC-Template steht auf GitHub Releases bereit — einfach URL in Proxmox einfügen und Container erstellen.',
+        'Das LXC-Template enthält ein vollständiges Ubuntu 26.04-System mit openbridge server und startet den Dienst automatisch beim Hochfahren des Containers.',
       steps: [
         {
-          title: 'Template-URL herunterladen',
-          note: 'Auf der GitHub Releases Seite die URL der aktuellen .tar.zst Template-Datei kopieren.',
+          title: 'Template herunterladen',
+          items: [
+            'Auf der Release-Seite die URL der .tar.zst-Datei sowie den SHA512-Hash aus dem Abschnitt LXC Template kopieren.',
+            'In der Proxmox-Weboberfläche zu Datacenter → Storage → local → CT Templates navigieren.',
+            'Download from URL klicken.',
+            'Die kopierte URL einfügen und auf Query URL klicken.',
+            'Als Hash-Algorithmus SHA512 auswählen.',
+            'Den kopierten Hash einfügen.',
+            'Auf Download klicken.',
+          ],
         },
         {
-          title: 'LXC-Container in Proxmox erstellen',
-          note: 'In Proxmox: CT erstellen → Template → Von URL herunterladen → Release-URL einfügen.',
+          title: 'Container erstellen',
+          items: [
+            'Im Proxmox-Menü Create CT wählen.',
+            'Als Template das gerade heruntergeladene ubuntu-plucky-openbridgeserver_… auswählen.',
+            'Hostname, Passwort, CPU, RAM und Netzwerk nach Bedarf konfigurieren — empfohlen: mindestens 512 MB RAM.',
+            'Container starten.',
+          ],
         },
         {
-          title: 'Container konfigurieren',
-          code: '# /etc/obs.env im Container bearbeiten\nnano /etc/obs.env',
-          note: 'OBS_JWT_SECRET und OBS_MQTT_PASSWORD vor dem ersten Start setzen.',
+          title: 'Zugriff',
+          note: 'http://<container-ip>:8080 im Browser öffnen.\nStandardzugang: admin / admin — Passwort sofort nach der ersten Anmeldung ändern (Einstellungen → Passwort).',
         },
         {
-          title: 'Service starten',
-          code: 'systemctl start obs\nsystemctl enable obs\n# Status prüfen\nsystemctl status obs',
-        },
-        {
-          title: 'Web-UI aufrufen',
-          code: '# http://<container-ip>:8080\n# Standard-Zugangsdaten: admin / admin',
+          title: 'Konfiguration anpassen (optional)',
+          code: '# Umgebungsvariablen in /etc/obs.env setzen, z. B.:\nOBS_MQTT__HOST=192.168.1.10\nOBS_SECURITY__JWT_SECRET=mein-geheimes-passwort\n\n# Dienst neu starten\nsystemctl restart obs',
         },
       ],
-      tip: 'Der LXC-Container führt obs als systemd-Service aus. Logs sind per journalctl -u obs -f verfügbar.',
-    },
-    native: {
-      intro:
-        'Für Entwicklung oder Umgebungen ohne Container. Benötigt Python 3.11+ und einen externen Mosquitto MQTT-Broker.',
-      steps: [
-        {
-          title: 'Voraussetzungen',
-          code: '# Python 3.11+ erforderlich\npython3 --version\n\n# Mosquitto installieren (Ubuntu/Debian)\napt install mosquitto mosquitto-clients',
-        },
-        {
-          title: 'Repository klonen und Virtual Environment erstellen',
-          code: 'git clone https://github.com/abeggled/openbridgeserver\ncd openbridgeserver\npython3 -m venv .venv\nsource .venv/bin/activate',
-        },
-        {
-          title: 'Abhängigkeiten installieren',
-          code: 'pip install -r requirements.txt',
-        },
-        {
-          title: 'Konfigurieren',
-          code: 'cp config.example.yaml config.yaml\n# config.yaml bearbeiten: mqtt.host und security.jwt_secret setzen',
-        },
-        {
-          title: 'Starten',
-          code: 'python -m obs\n# Zugriff: http://localhost:8080',
-        },
-      ],
-      tip: 'Im Entwicklungsmodus OBS_SERVER__LOG_LEVEL=DEBUG für ausführliche Ausgaben setzen.',
+      tip: 'Logs verfügbar via: journalctl -u obs -f',
     },
   },
 
