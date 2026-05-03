@@ -5,19 +5,19 @@ interface Props { t: Translations; }
 const { t } = Astro.props;
 ---
 
-<section id="protocols" class="py-24 sm:py-32 bg-[#080d0b]">
+<section id="protocols" class="py-24 sm:py-32 bg-[var(--c-bg-alt)]">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
     <div class="mx-auto max-w-2xl text-center mb-16">
-      <h2 class="font-mono text-3xl font-medium text-[#f0eeea] sm:text-4xl">
+      <h2 class="font-mono text-3xl font-medium text-[var(--c-text-1)] sm:text-4xl">
         {t.protocols.title}
       </h2>
-      <p class="mt-4 text-sm text-[#888780] leading-relaxed">{t.protocols.subtitle}</p>
+      <p class="mt-4 text-sm text-[var(--c-text-2)] leading-relaxed">{t.protocols.subtitle}</p>
     </div>
 
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {t.protocols.items.map((p, i) => (
-        <div class="group relative rounded-xl border border-bridge-950/60 bg-[#0a0f0d] p-5 transition hover:border-bridge-800/50">
+        <div class="group relative rounded-xl border border-bridge-950/60 bg-[var(--c-bg)] p-5 transition hover:border-bridge-800/50">
           {/* Index */}
           <span class="absolute top-4 right-4 font-mono text-xs text-bridge-950">
             {String(i + 1).padStart(2, '0')}
@@ -26,8 +26,15 @@ const { t } = Astro.props;
           {/* Protocol indicator */}
           <div class="mb-3 h-1 w-8 rounded-full bg-bridge-700/60 group-hover:bg-bridge-500/80 transition"></div>
 
-          <h3 class="font-mono text-sm font-medium text-bridge-200 mb-1">{p.name}</h3>
-          <p class="text-xs text-[#666663] leading-relaxed mb-3">{p.desc}</p>
+          <h3 class="font-mono text-sm font-medium text-bridge-200 mb-1 flex items-center gap-2 flex-wrap">
+            {p.name}
+            {p.planned && (
+              <span class="rounded-full border border-amber-700/50 bg-amber-950/40 px-1.5 py-0.5 font-mono text-[9px] leading-none text-amber-500 uppercase tracking-wider">
+                {t.protocols.badge_planned}
+              </span>
+            )}
+          </h3>
+          <p class="text-xs text-[var(--c-text-3)] leading-relaxed mb-3">{p.desc}</p>
           <p class="font-mono text-[10px] text-bridge-800 truncate">{p.detail}</p>
         </div>
       ))}
@@ -37,9 +44,6 @@ const { t } = Astro.props;
     <div class="mt-8 mx-auto max-w-xl rounded-lg border border-bridge-950/40 bg-bridge-950/20 px-5 py-3 text-center">
       <p class="font-mono text-xs text-bridge-700">
         <span class="text-bridge-500">∞</span>&nbsp;
-        {t.protocols.items.length === 8 ? (
-          <>Each adapter supports multiple simultaneous instances</>
-        ) : null}
         Multiple simultaneous instances — each protocol can run several independent configurations in parallel.
       </p>
     </div>

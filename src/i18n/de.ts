@@ -70,46 +70,55 @@ export const de: Translations = {
     title: 'Unterstützte Protokolle',
     subtitle:
       'Jedes Protokoll läuft als vollständig unabhängiger Adapter. Mehrere Instanzen desselben Protokolls gleichzeitig — jede mit eigener Konfiguration.',
+    badge_planned: 'Geplant',
     items: [
       {
         name: 'KNX / IP',
         desc: 'Tunneling & Routing. 85+ DPT-Typen über erweiterbare Registry.',
         detail: 'xknx · DPT 1–251 · Multi-Instanz',
+        planned: false,
       },
       {
         name: 'Modbus TCP',
         desc: 'Mehrere simultane Verbindungen mit konfigurierbarer Byte-/Wortreihenfolge.',
         detail: 'pymodbus · Coils, Register · Multi-Instanz',
+        planned: false,
       },
       {
         name: 'Modbus RTU',
         desc: 'Serielle RS-485 Kommunikation für ältere Feldgeräte.',
         detail: 'pymodbus · seriell · RS-485',
+        planned: true,
       },
       {
         name: '1-Wire',
         desc: 'Linux /sys/bus/w1/ Sensorintegration. DS18B20 und weitere.',
         detail: 'w1thermsensor · DS18B20 · Temperatur',
+        planned: true,
       },
       {
         name: 'MQTT',
         desc: 'Verbindung zu externen MQTT-Brokern. Bidirektional.',
         detail: 'aiomqtt · TLS · Authentifizierung',
+        planned: false,
       },
       {
         name: 'Home Assistant',
         desc: 'Echtzeit-Statussynchronisierung und Steuerung per WebSocket API.',
         detail: 'WebSocket API · bidirektional',
+        planned: false,
       },
       {
         name: 'ioBroker',
         desc: 'Bidirektionale Zustandsverwaltung. Import/Export von Objekten.',
         detail: 'Socket.IO · Import/Export',
+        planned: false,
       },
       {
         name: 'Zeitschaltuhr',
         desc: 'Zeitbasierte Trigger mit Cron, Feiertagen und Urlaubszeiten.',
         detail: 'croniter · astral · Feiertage',
+        planned: false,
       },
     ],
   },

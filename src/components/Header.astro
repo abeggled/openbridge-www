@@ -15,7 +15,7 @@ const base     = `/${lang}`;
 
 <header
   id="site-header"
-  class="fixed top-0 left-0 right-0 z-50 border-b border-bridge-950/80 bg-[#0a0f0d]/80 backdrop-blur-md transition-all"
+  class="fixed top-0 left-0 right-0 z-50 border-b border-bridge-950/80 bg-[var(--c-bg-blur)] backdrop-blur-md transition-all"
 >
   <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
 
@@ -28,13 +28,13 @@ const base     = `/${lang}`;
         height="36"
         class="rounded-lg transition-transform group-hover:scale-105"
       />
-      <span class="font-mono text-sm font-medium text-[#f0eeea] hidden sm:block">
+      <span class="font-mono text-sm font-medium text-[var(--c-text-1)] hidden sm:block">
         open<span class="text-bridge-300">bridge</span>
       </span>
     </a>
 
     {/* Desktop nav */}
-    <nav class="hidden md:flex items-center gap-6 text-sm text-[#888780]">
+    <nav class="hidden md:flex items-center gap-6 text-sm text-[var(--c-text-2)]">
       <a href={`${base}/#about`}     class="hover:text-bridge-300 transition-colors">{t.nav.what}</a>
       <a href={`${base}/#protocols`} class="hover:text-bridge-300 transition-colors">{t.nav.protocols}</a>
       <a href={`${base}/#features`}  class="hover:text-bridge-300 transition-colors">{t.nav.features}</a>
@@ -44,11 +44,35 @@ const base     = `/${lang}`;
 
     {/* Right actions */}
     <div class="flex items-center gap-3">
+      {/* Theme toggle */}
+      <button
+        id="theme-toggle"
+        class="rounded-md p-1.5 text-[var(--c-text-2)] hover:text-bridge-300 transition-colors"
+        aria-label="Toggle light/dark theme"
+      >
+        {/* Sun icon — shown in dark mode */}
+        <svg id="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="hidden">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        {/* Moon icon — shown in light mode */}
+        <svg id="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+
       {/* Language switcher */}
       <a
         href={altPath}
         aria-label={t.nav.lang_switch_label}
-        class="rounded-md border border-bridge-900 px-2.5 py-1 font-mono text-xs text-[#888780] hover:border-bridge-700 hover:text-bridge-300 transition-colors"
+        class="rounded-md border border-bridge-900 px-2.5 py-1 font-mono text-xs text-[var(--c-text-2)] hover:border-bridge-700 hover:text-bridge-300 transition-colors"
       >
         {t.nav.lang_switch}
       </a>
@@ -70,7 +94,7 @@ const base     = `/${lang}`;
       {/* Mobile menu toggle */}
       <button
         id="menu-toggle"
-        class="md:hidden rounded-md p-1.5 text-[#888780] hover:text-bridge-300 transition-colors"
+        class="md:hidden rounded-md p-1.5 text-[var(--c-text-2)] hover:text-bridge-300 transition-colors"
         aria-label="Toggle menu"
         aria-expanded="false"
       >
@@ -90,9 +114,9 @@ const base     = `/${lang}`;
   {/* Mobile nav */}
   <nav
     id="mobile-nav"
-    class="hidden md:hidden border-t border-bridge-950 bg-[#0a0f0d] px-4 py-4"
+    class="hidden md:hidden border-t border-bridge-950 bg-[var(--c-bg)] px-4 py-4"
   >
-    <ul class="flex flex-col gap-3 text-sm text-[#888780]">
+    <ul class="flex flex-col gap-3 text-sm text-[var(--c-text-2)]">
       <li><a href={`${base}/#about`}     class="block hover:text-bridge-300 transition-colors">{t.nav.what}</a></li>
       <li><a href={`${base}/#protocols`} class="block hover:text-bridge-300 transition-colors">{t.nav.protocols}</a></li>
       <li><a href={`${base}/#features`}  class="block hover:text-bridge-300 transition-colors">{t.nav.features}</a></li>
@@ -103,6 +127,27 @@ const base     = `/${lang}`;
 </header>
 
 <script>
+  // Theme toggle
+  const themeBtn = document.getElementById('theme-toggle');
+  const iconSun  = document.getElementById('icon-sun');
+  const iconMoon = document.getElementById('icon-moon');
+
+  function applyTheme(dark: boolean) {
+    document.documentElement.classList.toggle('dark', dark);
+    iconSun?.classList.toggle('hidden', !dark);
+    iconMoon?.classList.toggle('hidden', dark);
+  }
+
+  // Init icons based on current state
+  applyTheme(document.documentElement.classList.contains('dark'));
+
+  themeBtn?.addEventListener('click', () => {
+    const nowDark = !document.documentElement.classList.contains('dark');
+    localStorage.setItem('theme', nowDark ? 'dark' : 'light');
+    applyTheme(nowDark);
+  });
+
+  // Mobile menu
   const toggle = document.getElementById('menu-toggle');
   const nav    = document.getElementById('mobile-nav');
   const iconMenu  = document.getElementById('icon-menu');
@@ -115,7 +160,6 @@ const base     = `/${lang}`;
     iconClose?.classList.toggle('hidden', !open);
   });
 
-  // Close mobile nav on nav link click
   nav?.querySelectorAll('a').forEach(a =>
     a.addEventListener('click', () => {
       nav.classList.add('hidden');

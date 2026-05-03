@@ -6,16 +6,16 @@ const { t } = Astro.props;
 const i = t.install;
 ---
 
-<section id="install" class="py-24 sm:py-32 bg-[#080d0b]">
+<section id="install" class="py-24 sm:py-32 bg-[var(--c-bg-alt)]">
   <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 
     <div class="mx-auto max-w-2xl text-center mb-12">
-      <h2 class="font-mono text-3xl font-medium text-[#f0eeea] sm:text-4xl">{i.title}</h2>
-      <p class="mt-4 text-sm text-[#888780]">{i.subtitle}</p>
+      <h2 class="font-mono text-3xl font-medium text-[var(--c-text-1)] sm:text-4xl">{i.title}</h2>
+      <p class="mt-4 text-sm text-[var(--c-text-2)]">{i.subtitle}</p>
     </div>
 
     {/* Tab bar */}
-    <div class="flex gap-1 rounded-lg border border-bridge-950/60 bg-[#0a0f0d] p-1 mb-8">
+    <div class="flex gap-1 rounded-lg border border-bridge-950/60 bg-[var(--c-bg)] p-1 mb-8">
       {(['docker', 'lxc'] as const).map((tab) => (
         <button
           data-tab={tab}
@@ -32,7 +32,7 @@ const i = t.install;
       const panel = i[tab];
       return (
         <div data-panel={tab} class="install-panel hidden">
-          <p class="text-sm text-[#888780] leading-relaxed mb-8">{panel.intro}</p>
+          <p class="text-sm text-[var(--c-text-2)] leading-relaxed mb-8">{panel.intro}</p>
 
           <div class="flex flex-col gap-6">
             {panel.steps.map((step, idx) => (
@@ -43,10 +43,10 @@ const i = t.install;
                 </div>
 
                 <div class="flex-1 min-w-0 pt-0.5">
-                  <p class="font-mono text-sm font-medium text-[#f0eeea] mb-2">{step.title}</p>
+                  <p class="font-mono text-sm font-medium text-[var(--c-text-1)] mb-2">{step.title}</p>
 
                   {'code' in step && step.code && (
-                    <div class="relative group/code rounded-lg border border-bridge-950/60 bg-[#050807] overflow-hidden">
+                    <div class="relative group/code rounded-lg border border-bridge-950/60 bg-[var(--c-bg-code)] overflow-hidden">
                       <div class="flex items-center justify-between px-3 py-1.5 border-b border-bridge-950/40">
                         <div class="flex gap-1.5">
                           <span class="h-2.5 w-2.5 rounded-full bg-bridge-950"></span>
@@ -65,7 +65,7 @@ const i = t.install;
                   )}
 
                   {'note' in step && step.note && (
-                    <p class="mt-2 text-xs text-[#666663] italic">{step.note}</p>
+                    <p class="mt-2 text-xs text-[var(--c-text-3)] italic">{step.note}</p>
                   )}
                 </div>
               </div>
@@ -95,7 +95,7 @@ const i = t.install;
       t.dataset.active = String(on);
       t.className = on
         ? 'install-tab flex-1 rounded-md px-4 py-2 font-mono text-xs font-medium transition bg-bridge-900/60 text-bridge-200'
-        : 'install-tab flex-1 rounded-md px-4 py-2 font-mono text-xs font-medium transition text-[#555552] hover:text-bridge-400';
+        : 'install-tab flex-1 rounded-md px-4 py-2 font-mono text-xs font-medium transition text-[var(--c-text-4)] hover:text-bridge-400';
     });
     panels.forEach(p => p.classList.toggle('hidden', p.dataset.panel !== name));
   }

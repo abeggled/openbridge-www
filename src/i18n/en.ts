@@ -68,46 +68,55 @@ export const en = {
     title: 'Supported Protocols',
     subtitle:
       'Each protocol runs as a fully independent adapter. Run multiple instances of the same protocol simultaneously — with separate configurations.',
+    badge_planned: 'Planned',
     items: [
       {
         name: 'KNX / IP',
         desc: 'Tunneling & Routing. 85+ DPT types via extensible registry.',
         detail: 'xknx · DPT 1–251 · multi-instance',
+        planned: false,
       },
       {
         name: 'Modbus TCP',
         desc: 'Multiple simultaneous connections with configurable byte/word order.',
         detail: 'pymodbus · coils, registers · multi-instance',
+        planned: false,
       },
       {
         name: 'Modbus RTU',
         desc: 'Serial RS-485 communication for legacy field devices.',
         detail: 'pymodbus · serial · RS-485',
+        planned: true,
       },
       {
         name: '1-Wire',
         desc: 'Linux /sys/bus/w1/ sensor integration. DS18B20 and more.',
         detail: 'w1thermsensor · DS18B20 · temperature',
+        planned: true,
       },
       {
         name: 'MQTT',
         desc: 'Connect to any external MQTT broker. Bidirectional.',
         detail: 'aiomqtt · TLS · auth',
+        planned: false,
       },
       {
         name: 'Home Assistant',
         desc: 'Real-time state sync and command via WebSocket API.',
         detail: 'WebSocket API · bidirectional',
+        planned: false,
       },
       {
         name: 'ioBroker',
         desc: 'Bidirectional state management. Import/export of objects.',
         detail: 'Socket.IO · import/export',
+        planned: false,
       },
       {
         name: 'Scheduler',
         desc: 'Time-based triggers with cron, holidays, and vacation periods.',
         detail: 'croniter · astral · holidays',
+        planned: false,
       },
     ],
   },

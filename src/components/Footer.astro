@@ -11,7 +11,7 @@ const { t, lang } = Astro.props;
 const base = `/${lang}`;
 ---
 
-<footer class="border-t border-bridge-950/80 bg-[#080d0b] mt-24">
+<footer class="border-t border-bridge-950/80 bg-[var(--c-bg-alt)] mt-24">
   <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
 
@@ -19,14 +19,14 @@ const base = `/${lang}`;
       <div class="flex flex-col gap-4">
         <a href={`${base}/`} class="flex items-center gap-3">
           <img src="/logo/obs_icon_dark.svg" alt="openbridge server" width="32" height="32" class="rounded-lg" />
-          <span class="font-mono text-sm font-medium text-[#f0eeea]">
+          <span class="font-mono text-sm font-medium text-[var(--c-text-1)]">
             open<span class="text-bridge-300">bridge</span> server
           </span>
         </a>
-        <p class="text-xs text-[#555552] leading-relaxed max-w-xs">
+        <p class="text-xs text-[var(--c-text-4)] leading-relaxed max-w-xs">
           {t.footer.tagline}
         </p>
-        <p class="text-xs text-[#444441]">{t.footer.copyright}</p>
+        <p class="text-xs text-[var(--c-text-5)]">{t.footer.copyright}</p>
       </div>
 
       {/* Links */}
@@ -34,7 +34,7 @@ const base = `/${lang}`;
         <h3 class="mb-3 font-mono text-xs font-medium uppercase tracking-widest text-bridge-700">
           {t.footer.links_title}
         </h3>
-        <ul class="flex flex-col gap-2 text-sm text-[#555552]">
+        <ul class="flex flex-col gap-2 text-sm text-[var(--c-text-4)]">
           <li>
             <a href="https://github.com/abeggled/openbridgeserver" target="_blank" rel="noopener noreferrer"
                class="hover:text-bridge-300 transition-colors flex items-center gap-1.5">
@@ -62,7 +62,7 @@ const base = `/${lang}`;
         <h3 class="mb-3 font-mono text-xs font-medium uppercase tracking-widest text-bridge-700">
           {t.footer.legal_title}
         </h3>
-        <ul class="flex flex-col gap-2 text-sm text-[#555552]">
+        <ul class="flex flex-col gap-2 text-sm text-[var(--c-text-4)]">
           <li>
             <a href="https://github.com/abeggled/openbridgeserver/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"
                class="hover:text-bridge-300 transition-colors">

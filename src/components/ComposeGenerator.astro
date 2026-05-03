@@ -10,14 +10,14 @@ const g = t.generator;
   <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 
     <div class="mx-auto max-w-2xl text-center mb-12">
-      <h2 class="font-mono text-3xl font-medium text-[#f0eeea] sm:text-4xl">{g.title}</h2>
-      <p class="mt-4 text-sm text-[#888780] leading-relaxed">{g.subtitle}</p>
+      <h2 class="font-mono text-3xl font-medium text-[var(--c-text-1)] sm:text-4xl">{g.title}</h2>
+      <p class="mt-4 text-sm text-[var(--c-text-2)] leading-relaxed">{g.subtitle}</p>
     </div>
 
-    <div class="rounded-xl border border-bridge-950/60 bg-[#0a0f0d] overflow-hidden">
+    <div class="rounded-xl border border-bridge-950/60 bg-[var(--c-bg)] overflow-hidden">
 
       {/* Header */}
-      <div class="border-b border-bridge-950/60 px-6 py-4 bg-[#080d0b]">
+      <div class="border-b border-bridge-950/60 px-6 py-4 bg-[var(--c-bg-alt)]">
         <p class="font-mono text-xs text-bridge-700 uppercase tracking-widest">compose generator</p>
       </div>
 
@@ -31,7 +31,7 @@ const g = t.generator;
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
             <span class="font-mono text-sm text-bridge-200">openbridge server</span>
-            <span class="text-[#444441] mx-1">+</span>
+            <span class="text-[var(--c-text-5)] mx-1">+</span>
             <span class="font-mono text-sm text-bridge-200">Mosquitto</span>
             <span class="ml-auto font-mono text-xs text-bridge-800">{g.base_desc}</span>
           </div>
@@ -44,7 +44,7 @@ const g = t.generator;
 
             {/* InfluxDB */}
             <div class="rounded-lg border border-bridge-950/60 p-4">
-              <p class="font-mono text-xs font-medium text-[#f0eeea] mb-3">{g.influx_label}</p>
+              <p class="font-mono text-xs font-medium text-[var(--c-text-1)] mb-3">{g.influx_label}</p>
               <div class="flex flex-col gap-2" id="influx-options">
                 {(['influx_none', 'influx1', 'influx2', 'influx3'] as const).map((v) => (
                   <label class="flex items-center gap-2.5 cursor-pointer group">
@@ -55,7 +55,7 @@ const g = t.generator;
                       class="h-3.5 w-3.5 accent-bridge-500"
                       checked={v === 'influx_none'}
                     />
-                    <span class="font-mono text-xs text-[#888780] group-hover:text-bridge-400 transition">
+                    <span class="font-mono text-xs text-[var(--c-text-2)] group-hover:text-bridge-400 transition">
                       {g.version_labels[v]}
                     </span>
                   </label>
@@ -65,7 +65,7 @@ const g = t.generator;
 
             {/* Grafana */}
             <div class="rounded-lg border border-bridge-950/60 p-4">
-              <p class="font-mono text-xs font-medium text-[#f0eeea] mb-3">{g.grafana_label}</p>
+              <p class="font-mono text-xs font-medium text-[var(--c-text-1)] mb-3">{g.grafana_label}</p>
               <div class="flex flex-col gap-2" id="grafana-options">
                 {(['grafana_none', 'grafana_ce', 'grafana_ent'] as const).map((v) => (
                   <label class="flex items-center gap-2.5 cursor-pointer group">
@@ -76,7 +76,7 @@ const g = t.generator;
                       class="h-3.5 w-3.5 accent-bridge-500"
                       checked={v === 'grafana_none'}
                     />
-                    <span class="font-mono text-xs text-[#888780] group-hover:text-bridge-400 transition">
+                    <span class="font-mono text-xs text-[var(--c-text-2)] group-hover:text-bridge-400 transition">
                       {g.version_labels[v]}
                     </span>
                   </label>
@@ -86,7 +86,7 @@ const g = t.generator;
 
             {/* Reverse Proxy */}
             <div class="rounded-lg border border-bridge-950/60 p-4">
-              <p class="font-mono text-xs font-medium text-[#f0eeea] mb-3">{g.proxy_label}</p>
+              <p class="font-mono text-xs font-medium text-[var(--c-text-1)] mb-3">{g.proxy_label}</p>
               <div class="flex flex-col gap-2" id="proxy-options">
                 {(['proxy_none', 'proxy_caddy', 'proxy_nginx', 'proxy_npm'] as const).map((v) => (
                   <label class="flex items-center gap-2.5 cursor-pointer group">
@@ -97,7 +97,7 @@ const g = t.generator;
                       class="h-3.5 w-3.5 accent-bridge-500"
                       checked={v === 'proxy_none'}
                     />
-                    <span class="font-mono text-xs text-[#888780] group-hover:text-bridge-400 transition">
+                    <span class="font-mono text-xs text-[var(--c-text-2)] group-hover:text-bridge-400 transition">
                       {g.version_labels[v]}
                     </span>
                   </label>
@@ -113,33 +113,33 @@ const g = t.generator;
           <p class="font-mono text-xs text-bridge-600 uppercase tracking-widest mb-3">{g.config_title}</p>
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
-              <label class="block font-mono text-xs text-[#888780] mb-1.5">{g.domain}</label>
+              <label class="block font-mono text-xs text-[var(--c-text-2)] mb-1.5">{g.domain}</label>
               <input
                 id="cfg-domain"
                 type="text"
                 placeholder={g.domain_placeholder}
                 value="obs.example.com"
-                class="w-full rounded-md border border-bridge-950/60 bg-[#080d0b] px-3 py-2 font-mono text-xs text-[#f0eeea] placeholder-[#333330] focus:border-bridge-700 focus:outline-none transition"
+                class="w-full rounded-md border border-bridge-950/60 bg-[var(--c-bg-alt)] px-3 py-2 font-mono text-xs text-[var(--c-text-1)] placeholder-[var(--c-placeholder)] focus:border-bridge-700 focus:outline-none transition"
               />
             </div>
             <div>
-              <label class="block font-mono text-xs text-[#888780] mb-1.5">{g.timezone}</label>
+              <label class="block font-mono text-xs text-[var(--c-text-2)] mb-1.5">{g.timezone}</label>
               <input
                 id="cfg-tz"
                 type="text"
                 placeholder={g.timezone_placeholder}
                 value="Europe/Zurich"
-                class="w-full rounded-md border border-bridge-950/60 bg-[#080d0b] px-3 py-2 font-mono text-xs text-[#f0eeea] placeholder-[#333330] focus:border-bridge-700 focus:outline-none transition"
+                class="w-full rounded-md border border-bridge-950/60 bg-[var(--c-bg-alt)] px-3 py-2 font-mono text-xs text-[var(--c-text-1)] placeholder-[var(--c-placeholder)] focus:border-bridge-700 focus:outline-none transition"
               />
             </div>
             <div id="port-field">
-              <label class="block font-mono text-xs text-[#888780] mb-1.5">{g.obs_port}</label>
+              <label class="block font-mono text-xs text-[var(--c-text-2)] mb-1.5">{g.obs_port}</label>
               <input
                 id="cfg-port"
                 type="text"
                 placeholder="8080"
                 value="8080"
-                class="w-full rounded-md border border-bridge-950/60 bg-[#080d0b] px-3 py-2 font-mono text-xs text-[#f0eeea] placeholder-[#333330] focus:border-bridge-700 focus:outline-none transition"
+                class="w-full rounded-md border border-bridge-950/60 bg-[var(--c-bg-alt)] px-3 py-2 font-mono text-xs text-[var(--c-text-1)] placeholder-[var(--c-placeholder)] focus:border-bridge-700 focus:outline-none transition"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@ const g = t.generator;
         {/* Generate button */}
         <button
           id="generate-btn"
-          class="w-full rounded-lg bg-bridge-700 py-3 font-mono text-sm font-medium text-[#f0eeea] transition hover:bg-bridge-600 active:scale-[0.99]"
+          class="w-full rounded-lg bg-bridge-700 py-3 font-mono text-sm font-medium text-[var(--c-text-1)] transition hover:bg-bridge-600 active:scale-[0.99]"
         >
           {g.generate_btn}
         </button>
@@ -158,11 +158,11 @@ const g = t.generator;
           <p class="font-mono text-xs text-bridge-600 uppercase tracking-widest mb-3">{g.output_title}</p>
 
           {/* Tab bar */}
-          <div id="output-tabs" class="flex gap-1 rounded-lg border border-bridge-950/60 bg-[#080d0b] p-1 mb-0 overflow-x-auto"></div>
+          <div id="output-tabs" class="flex gap-1 rounded-lg border border-bridge-950/60 bg-[var(--c-bg-alt)] p-1 mb-0 overflow-x-auto"></div>
 
           {/* Code pane */}
-          <div class="rounded-b-xl border border-t-0 border-bridge-950/60 bg-[#050807] overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-2 border-b border-bridge-950/40 bg-[#080d0b]">
+          <div class="rounded-b-xl border border-t-0 border-bridge-950/60 bg-[var(--c-bg-code)] overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 border-b border-bridge-950/40 bg-[var(--c-bg-alt)]">
               <div class="flex gap-1.5">
                 <span class="h-2.5 w-2.5 rounded-full bg-bridge-950"></span>
                 <span class="h-2.5 w-2.5 rounded-full bg-bridge-950"></span>
@@ -191,7 +191,7 @@ const g = t.generator;
     </div>
 
     {/* Note: InfluxDB 3 */}
-    <p id="influx3-note" class="hidden mt-4 text-xs text-[#666663] text-center italic">{g.note_influx3}</p>
+    <p id="influx3-note" class="hidden mt-4 text-xs text-[var(--c-text-3)] text-center italic">{g.note_influx3}</p>
 
   </div>
 </section>
@@ -654,7 +654,7 @@ function switchTab(tab: TabKey) {
     const on = b.dataset.tab === tab;
     b.className = on
       ? 'gen-tab flex-shrink-0 rounded-md px-3 py-1.5 font-mono text-xs transition bg-bridge-900/60 text-bridge-200'
-      : 'gen-tab flex-shrink-0 rounded-md px-3 py-1.5 font-mono text-xs transition text-[#555552] hover:text-bridge-400';
+      : 'gen-tab flex-shrink-0 rounded-md px-3 py-1.5 font-mono text-xs transition text-[var(--c-text-4)] hover:text-bridge-400';
   });
 }
 
