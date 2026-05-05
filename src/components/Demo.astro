@@ -1,0 +1,97 @@
+---
+import type { Translations } from '../i18n/en';
+
+interface Props { t: Translations; }
+const { t } = Astro.props;
+
+// Fetch latest release version from GitHub at build time (same logic as Hero.astro)
+let version = 'v0.1';
+if (import.meta.env.PROD) {
+  try {
+    const res = await fetch('https://api.github.com/repos/abeggled/openbridgeserver/releases', {
+      signal: AbortSignal.timeout(3000),
+      headers: { 'Accept': 'application/vnd.github+json' },
+    });
+    if (res.ok) {
+      const releases = await res.json();
+      if (Array.isArray(releases) && releases.length > 0 && releases[0].tag_name) {
+        version = releases[0].tag_name;
+      }
+    }
+  } catch { /* fallback to static version */ }
+}
+
+// Password equals version number without leading "v"
+const demoPassword = version.replace(/^v/, '');
+---
+
+<section id="demo" class="py-24 sm:py-32">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+    <div class="mx-auto max-w-2xl text-center mb-16">
+      <h2 class="font-mono text-3xl font-medium text-[var(--c-text-1)] sm:text-4xl">
+        {t.demo.title}
+      </h2>
+      <p class="mt-4 text-sm text-[var(--c-text-2)] leading-relaxed">{t.demo.subtitle}</p>
+    </div>
+
+    <div class="mx-auto max-w-3xl space-y-6">
+
+      {/* Access card */}
+      <div class="rounded-xl border border-bridge-950/60 bg-[var(--c-bg-card40)] overflow-hidden">
+        <div class="px-5 py-4 border-b border-bridge-950/60 flex items-center gap-3">
+          <span class="h-2 w-2 rounded-full bg-bridge-400 animate-pulse"></span>
+          <span class="font-mono text-xs text-bridge-500 uppercase tracking-widest">{t.demo.access_label}</span>
+        </div>
+        <div class="p-6 space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <a
+              href="https://demo.open-bridge.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 rounded-lg bg-bridge-700 px-5 py-2.5 font-mono text-sm font-medium text-[var(--c-text-1)] shadow-lg shadow-bridge-950/50 transition hover:bg-bridge-600"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              demo.open-bridge.io
+            </a>
+            <span class="text-xs text-[var(--c-text-4)]">https://demo.open-bridge.io</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="rounded-lg border border-bridge-950/50 bg-[var(--c-bg)] px-4 py-3">
+              <div class="text-[10px] font-mono uppercase tracking-widest text-[var(--c-text-5)] mb-1">{t.demo.label_user}</div>
+              <div class="font-mono text-sm text-[var(--c-accent)]">demo</div>
+            </div>
+            <div class="rounded-lg border border-bridge-950/50 bg-[var(--c-bg)] px-4 py-3">
+              <div class="text-[10px] font-mono uppercase tracking-widest text-[var(--c-text-5)] mb-1">{t.demo.label_password}</div>
+              <div class="font-mono text-sm text-[var(--c-accent)]">{demoPassword}</div>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-[var(--c-text-5)] leading-relaxed">{t.demo.password_note}</p>
+        </div>
+      </div>
+
+      {/* Limitations notice */}
+      <div class="rounded-xl border border-bridge-900/40 bg-bridge-950/20 px-6 py-5 space-y-3">
+        <div class="flex items-center gap-2 text-bridge-400">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span class="font-mono text-xs font-medium uppercase tracking-widest">{t.demo.notice_title}</span>
+        </div>
+        <ul class="space-y-1.5 text-xs text-[var(--c-text-3)] leading-relaxed list-none">
+          {t.demo.notice_items.map((item) => (
+            <li class="flex items-start gap-2">
+              <span class="text-bridge-700 mt-0.5 shrink-0">—</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>

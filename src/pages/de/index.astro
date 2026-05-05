@@ -7,6 +7,7 @@ import Protocols from '../../components/Protocols.astro';
 import Features from '../../components/Features.astro';
 import Installation from '../../components/Installation.astro';
 import ComposeGenerator from '../../components/ComposeGenerator.astro';
+import Demo from '../../components/Demo.astro';
 import Footer from '../../components/Footer.astro';
 import { de as t } from '../../i18n/de';
 
@@ -22,6 +23,7 @@ const lang = 'de' as const;
     <Features t={t} />
     <Installation t={t} />
     <ComposeGenerator t={t} />
+    <Demo t={t} />
   </main>
   <Footer t={t} lang={lang} />
 </Layout>
