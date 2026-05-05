@@ -14,6 +14,8 @@ export const de: Translations = {
     features: 'Features',
     install: 'Installation',
     generator: 'Compose Generator',
+    demo: 'Demo',
+    docs: 'Docs',
     github: 'GitHub',
     lang_switch: 'EN',
     lang_switch_label: 'Auf Englisch wechseln',
@@ -245,6 +247,22 @@ export const de: Translations = {
       'Mit Reverse Proxy ist OBS nicht direkt exponiert. Zugriff über deine Domain.',
     note_influx3:
       'InfluxDB 3 Core verwendet eine neue Storage-Engine. Das History-Backend in den OBS-Einstellungen nach dem Start konfigurieren.',
+  },
+
+  demo: {
+    title: 'Live-Demo',
+    subtitle: 'Teste den open bridge server ohne Installation — die Demo-Umgebung ist öffentlich zugänglich und wird regelmässig zurückgesetzt.',
+    access_label: 'Demo-Zugang',
+    label_user: 'Benutzername',
+    label_password: 'Passwort',
+    password_note: 'Das Passwort entspricht der aktuellen Release-Version und wird automatisch mit jedem Release aktualisiert.',
+    notice_title: 'Demo-Einschränkungen',
+    notice_items: [
+      'Nicht alle Funktionen sind in der Demo-Umgebung verfügbar.',
+      'Keine echten Busdaten: KNX-, MQTT- und Modbus-Verbindungen werden durch einen Testdaten-Generator emuliert, der die jeweiligen Bussysteme simuliert.',
+      'Konfigurationsänderungen werden nicht gespeichert — die Umgebung wird periodisch zurückgesetzt.',
+      'Keine echten Zugangsdaten, Passwörter oder sensible Informationen in der Demo eingeben.',
+    ],
   },
 
   footer: {
