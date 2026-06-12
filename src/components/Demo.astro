@@ -4,18 +4,18 @@ import type { Translations } from '../i18n/en';
 interface Props { t: Translations; }
 const { t } = Astro.props;
 
-// Fetch latest release version from GitHub at build time (same logic as Hero.astro)
+// Fetch the release marked as latest on GitHub at build time.
 let version = 'v0.1';
 if (import.meta.env.PROD) {
   try {
-    const res = await fetch('https://api.github.com/repos/abeggled/openbridgeserver/releases', {
+    const res = await fetch('https://api.github.com/repos/abeggled/openbridgeserver/releases/latest', {
       signal: AbortSignal.timeout(3000),
       headers: { 'Accept': 'application/vnd.github+json' },
     });
     if (res.ok) {
-      const releases = await res.json();
-      if (Array.isArray(releases) && releases.length > 0 && releases[0].tag_name) {
-        version = releases[0].tag_name;
+      const release = await res.json();
+      if (release?.tag_name) {
+        version = release.tag_name;
       }
     }
   } catch { /* fallback to static version */ }
