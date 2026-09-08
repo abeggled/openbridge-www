@@ -98,7 +98,7 @@ export const de: Translations = {
         name: '1-Wire',
         desc: 'Linux /sys/bus/w1/ Sensorintegration. DS18B20 und weitere.',
         detail: 'w1thermsensor · DS18B20 · Temperatur',
-        planned: true,
+        planned: false,
       },
       {
         name: 'MQTT',
@@ -174,11 +174,11 @@ export const de: Translations = {
         {
           title: 'Template herunterladen',
           items: [
-            'Auf der Release-Seite die URL der .tar.zst-Datei sowie den SHA512-Hash aus dem Abschnitt LXC Template kopieren.',
+            'Auf der Release-Seite die URL der .tar.zst-Datei sowie den SHA256-Hash aus dem Abschnitt LXC Template kopieren.',
             'In der Proxmox-Weboberfläche zu Datacenter → Storage → local → CT Templates navigieren.',
             'Download from URL klicken.',
             'Die kopierte URL einfügen und auf Query URL klicken.',
-            'Als Hash-Algorithmus SHA512 auswählen.',
+            'Als Hash-Algorithmus SHA256 auswählen.',
             'Den kopierten Hash einfügen.',
             'Auf Download klicken.',
           ],
